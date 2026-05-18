@@ -1,0 +1,53 @@
+# Composer / Node dependencies
+/vendor
+/node_modules
+
+# Frontend build output
+/public/build
+/public/hot
+/public/storage
+
+# Laravel runtime
+/storage/*.key
+/storage/pail
+/.phpunit.cache
+/.phpunit.result.cache
+
+# Environment / secrets — keep templates committed
+.env
+.env.backup
+.env.production
+.env.local
+.env.*.local
+.phpactor.json
+auth.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editors / IDEs
+.idea
+.vscode
+.fleet
+.nova
+.zed
+*.swp
+*.swo
+*~
+
+# Local tooling state (Claude Code, etc.)
+.claude/
+.phpunit.cache
+
+# Homestead / Sail / docker overrides
+Homestead.json
+Homestead.yaml
+/.vagrant
+docker-compose.override.yml
