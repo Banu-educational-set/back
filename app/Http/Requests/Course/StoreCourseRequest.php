@@ -18,7 +18,7 @@ class StoreCourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'term_id' => ['required', 'integer', 'exists:terms,id'],
+            'term_id' => ['nullable', 'integer', 'exists:terms,id'],
             'teacher_id' => ['nullable', 'integer', Rule::exists('users', 'id')],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],

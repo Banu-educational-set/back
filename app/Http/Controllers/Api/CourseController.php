@@ -20,7 +20,8 @@ class CourseController extends Controller
     {
         $courses = $this->courseService->paginate(
             viewer: $request->user(),
-            termId: $request->integer('term_id') ?: null,
+            termId: $request->filled('term_id') ? (int) $request->input('term_id') : null,
+            orphansOnly: ! $request->has('term_id'),
             perPage: (int) $request->integer('per_page', 20),
         );
 

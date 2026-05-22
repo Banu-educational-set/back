@@ -2,6 +2,7 @@
 
 use App\Enums\RoleName;
 use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CourseSessionController;
@@ -101,6 +102,10 @@ Route::middleware([
     Route::patch('homework-submissions/{submission}/review', [HomeworkController::class, 'review']);
 
     Route::delete('media/{medium}', [MediaController::class, 'destroy']);
+
+    Route::get('terms/{term}/attendees', [AttendanceController::class, 'term']);
+    Route::get('courses/{course}/attendees', [AttendanceController::class, 'course']);
+    Route::get('sessions/{session}/attendees', [AttendanceController::class, 'session']);
 });
 
 /*

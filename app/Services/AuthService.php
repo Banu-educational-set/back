@@ -25,8 +25,8 @@ class AuthService
     {
         $user = User::create([
             'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'] ?? null,
+            'phone' => $data['phone'],
+            'email' => $data['email'] ?? null,
             'password' => $data['password'],
         ]);
 
@@ -46,7 +46,7 @@ class AuthService
      */
     public function login(array $credentials): array
     {
-        $user = User::where('email', $credentials['email'])->first();
+        $user = User::where('phone', $credentials['phone'])->first();
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             throw new AuthenticationException('Invalid credentials.');

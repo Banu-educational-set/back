@@ -14,7 +14,7 @@ class UpdateCourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'term_id' => ['sometimes', 'integer', 'exists:terms,id'],
+            'term_id' => ['sometimes', 'nullable', 'integer', 'exists:terms,id'],
             'teacher_id' => ['nullable', 'integer', 'exists:users,id'],
             'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],

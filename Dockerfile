@@ -3,6 +3,9 @@ FROM php:8.3-fpm-alpine AS base
 ARG UID=1000
 ARG GID=1000
 
+# Use Arvan Alpine mirror (works from Iran). Harmless elsewhere.
+RUN sed -i 's|https://dl-cdn.alpinelinux.org|https://mirror.arvancloud.ir|g' /etc/apk/repositories
+
 RUN apk add --no-cache \
         bash \
         git \
