@@ -23,7 +23,7 @@ class CourseSessionService
                 $this->mustFilterInactive($viewer),
                 fn ($q) => $q->whereHas('course', fn ($c) => $c->where('is_active', true))
             )
-            ->orderBy('starts_at')
+            ->orderByDesc('id')
             ->paginate($perPage);
     }
 

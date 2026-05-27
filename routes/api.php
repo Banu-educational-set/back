@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\RoleName;
+use App\Http\Controllers\Api\Admin\EnrollmentController as AdminEnrollmentController;
 use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\Auth\AuthController;
@@ -64,12 +65,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('media', [MediaController::class, 'store']);
 
     // Read-only access for everyone
-    Route::get('terms', [TermController::class, 'index']);
-    Route::get('terms/{term}', [TermController::class, 'show']);
     Route::get('courses', [CourseController::class, 'index']);
     Route::get('courses/{course}', [CourseController::class, 'show']);
     Route::get('sessions', [CourseSessionController::class, 'index']);
     Route::get('sessions/{session}', [CourseSessionController::class, 'show']);
+    Route::get('sessions/{session}/exams', [ExamController::class, 'forSession']);
+    Route::get('sessions/{session}/homeworks', [HomeworkController::class, 'forSession']);
     Route::get('exams/{exam}', [ExamController::class, 'show']);
 
     // Authenticated download endpoint for files (works for all disks).
@@ -83,6 +84,8 @@ Route::middleware([
     'auth:sanctum',
     'role:'.RoleName::Admin->value.'|'.RoleName::Teacher->value,
 ])->group(function () {
+    Route::get('terms', [TermController::class, 'index']);
+    Route::get('terms/{term}', [TermController::class, 'show']);
     Route::post('terms', [TermController::class, 'store']);
     Route::match(['put', 'patch'], 'terms/{term}', [TermController::class, 'update']);
 
@@ -130,7 +133,6 @@ Route::middleware([
     Route::post('homeworks/{homework}/submit', [HomeworkController::class, 'submit']);
 
     Route::prefix('student')->group(function () {
-        Route::post('terms/{term}/enroll', [EnrollmentController::class, 'enroll']);
         Route::get('my-terms', [EnrollmentController::class, 'myTerms']);
         Route::get('my-terms/{term}', [EnrollmentController::class, 'showTerm']);
 
@@ -152,6 +154,12 @@ Route::middleware(['auth:sanctum', 'role:'.RoleName::Admin->value])
     ->group(function () {
         Route::apiResource('users', AdminUserController::class);
         Route::patch('users/{user}/role', [AdminUserController::class, 'assignRole']);
+
+        Route::get('homeworks', [HomeworkController::class, 'index']);
+        Route::get('exams', [ExamController::class, 'index']);
+
+        Route::get('terms/{term}/enrollees', [AdminEnrollmentController::class, 'index']);
+        Route::post('terms/{term}/enrollees', [AdminEnrollmentController::class, 'store']);
 
         Route::get('tickets', [StaffTicketController::class, 'index'])
             ->defaults('staffScope', RoleName::Admin->value);

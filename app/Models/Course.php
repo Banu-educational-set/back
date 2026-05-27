@@ -13,11 +13,12 @@ class Course extends Model
 {
     use HasFactory, HasMedia;
 
-    protected $fillable = ['term_id', 'teacher_id', 'title', 'description', 'capacity', 'is_active'];
+    protected $fillable = ['term_id', 'teacher_id', 'title', 'description', 'capacity', 'is_active', 'prerequisite_course_ids'];
 
     protected $casts = [
         'capacity' => 'integer',
         'is_active' => 'boolean',
+        'prerequisite_course_ids' => 'array',
     ];
 
     public function term(): BelongsTo

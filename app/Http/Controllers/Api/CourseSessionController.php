@@ -3,18 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Enums\RoleName;
 use App\Http\Requests\Session\StoreSessionRequest;
 use App\Http\Requests\Session\UpdateSessionRequest;
 use App\Http\Resources\CourseSessionResource;
 use App\Models\CourseSession;
 use App\Services\CourseSessionService;
+use App\Services\PrerequisiteService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CourseSessionController extends Controller
 {
-    public function __construct(private readonly CourseSessionService $sessionService) {}
+    public function __construct(
+        private readonly CourseSessionService $sessionService,
+        private readonly PrerequisiteService $prerequisiteService,
+    ) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -27,8 +32,20 @@ class CourseSessionController extends Controller
         return ApiResponse::success(CourseSessionResource::collection($sessions));
     }
 
-    public function show(CourseSession $session): JsonResponse
+    public function show(Request $request, CourseSession $session): JsonResponse
     {
+        $user = $request->user();
+        if ($user && $user->hasRole(RoleName::Student->value) && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value])) {
+            $unmet = $this->prerequisiteService->sessionUnmetPrerequisites($user, $session);
+            if ($unmet !== []) {
+                return ApiResponse::error(
+                    'Prerequisites not met for this session.',
+                    ['prerequisite_session_ids' => $unmet],
+                    403,
+                );
+            }
+        }
+
         return ApiResponse::success(new CourseSessionResource($session->load(['course', 'media'])));
     }
 

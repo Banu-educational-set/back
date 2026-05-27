@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\RoleName;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Exam\StoreExamRequest;
 use App\Http\Requests\Exam\StoreOptionRequest;
@@ -12,10 +13,12 @@ use App\Http\Resources\ExamAttemptResource;
 use App\Http\Resources\ExamOptionResource;
 use App\Http\Resources\ExamQuestionResource;
 use App\Http\Resources\ExamResource;
+use App\Models\CourseSession;
 use App\Models\Exam;
 use App\Models\ExamQuestion;
 use App\Services\ExamManagementService;
 use App\Services\ExamScoringService;
+use App\Services\PrerequisiteService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,7 +29,45 @@ class ExamController extends Controller
     public function __construct(
         private readonly ExamScoringService $scoringService,
         private readonly ExamManagementService $managementService,
+        private readonly PrerequisiteService $prerequisiteService,
     ) {}
+
+    public function forSession(Request $request, CourseSession $session): JsonResponse
+    {
+        $user = $request->user();
+        $isStudent = $user && $user->hasRole(RoleName::Student->value)
+            && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value]);
+
+        if ($isStudent) {
+            $unmet = $this->prerequisiteService->sessionUnmetPrerequisites($user, $session);
+            if ($unmet !== []) {
+                return ApiResponse::error(
+                    'Prerequisites not met for this session.',
+                    ['prerequisite_session_ids' => $unmet],
+                    403,
+                );
+            }
+        }
+
+        $exams = Exam::query()
+            ->where('session_id', $session->id)
+            ->when($isStudent, fn ($q) => $q->where('is_active', true))
+            ->orderByDesc('id')
+            ->paginate((int) $request->integer('per_page', 20));
+
+        return ApiResponse::success(ExamResource::collection($exams));
+    }
+
+    public function index(Request $request): JsonResponse
+    {
+        $exams = $this->managementService->paginate(
+            sessionId: $request->filled('session_id') ? (int) $request->input('session_id') : null,
+            courseId: $request->filled('course_id') ? (int) $request->input('course_id') : null,
+            perPage: (int) $request->integer('per_page', 20),
+        );
+
+        return ApiResponse::success(ExamResource::collection($exams));
+    }
 
     public function show(Request $request, Exam $exam): JsonResponse
     {

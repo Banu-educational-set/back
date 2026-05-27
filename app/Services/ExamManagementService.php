@@ -5,11 +5,22 @@ namespace App\Services;
 use App\Models\Exam;
 use App\Models\ExamOption;
 use App\Models\ExamQuestion;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 class ExamManagementService
 {
+    public function paginate(?int $sessionId, ?int $courseId, int $perPage = 20): LengthAwarePaginator
+    {
+        return Exam::query()
+            ->with('session.course')
+            ->when($sessionId, fn ($q, $id) => $q->where('session_id', $id))
+            ->when($courseId, fn ($q, $id) => $q->whereHas('session', fn ($s) => $s->where('course_id', $id)))
+            ->orderByDesc('id')
+            ->paginate($perPage);
+    }
+
     public function createExam(array $data): Exam
     {
         return Exam::create($data);

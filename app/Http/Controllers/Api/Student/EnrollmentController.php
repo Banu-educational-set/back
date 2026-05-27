@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Student;
 
+use App\Enums\EnrollmentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TermEnrollmentResource;
 use App\Models\Term;
@@ -10,33 +11,27 @@ use App\Services\EnrollmentService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use RuntimeException;
 
 class EnrollmentController extends Controller
 {
     public function __construct(private readonly EnrollmentService $enrollmentService) {}
 
-    public function enroll(Request $request, Term $term): JsonResponse
-    {
-        try {
-            $enrollment = $this->enrollmentService->enroll($request->user(), $term);
-        } catch (RuntimeException $e) {
-            return ApiResponse::error($e->getMessage(), null, 422);
-        }
-
-        return ApiResponse::success(
-            new TermEnrollmentResource($enrollment->load('term')),
-            'Enrolled.',
-            201,
-        );
-    }
-
     public function myTerms(Request $request): JsonResponse
     {
+        $status = $request->input('status');
+        if ($status !== null && ! in_array($status, EnrollmentStatus::values(), true)) {
+            return ApiResponse::error(
+                'Invalid status. Allowed: '.implode(', ', EnrollmentStatus::values()).'.',
+                ['status' => ['Invalid value.']],
+                422,
+            );
+        }
+
         return ApiResponse::success(
             TermEnrollmentResource::collection(
                 $this->enrollmentService->paginateForUser(
                     $request->user(),
+                    $status,
                     (int) $request->integer('per_page', 20),
                 ),
             ),

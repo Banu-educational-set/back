@@ -44,11 +44,22 @@ class EnrollmentService
         return $enrollment->fresh();
     }
 
-    public function paginateForUser(User $user, int $perPage = 20): LengthAwarePaginator
+    public function paginateForUser(User $user, ?string $status, int $perPage = 20): LengthAwarePaginator
     {
         return TermEnrollment::query()
             ->with('term')
             ->where('user_id', $user->id)
+            ->when($status, fn ($q, $s) => $q->where('status', $s))
+            ->orderByDesc('id')
+            ->paginate($perPage);
+    }
+
+    public function paginateForTerm(int $termId, ?string $status, int $perPage = 20): LengthAwarePaginator
+    {
+        return TermEnrollment::query()
+            ->with(['user.roles', 'user.avatar'])
+            ->where('term_id', $termId)
+            ->when($status, fn ($q, $s) => $q->where('status', $s))
             ->orderByDesc('id')
             ->paginate($perPage);
     }

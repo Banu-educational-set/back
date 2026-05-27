@@ -16,6 +16,7 @@ class TermEnrollmentResource extends JsonResource
             'status' => $this->status instanceof \BackedEnum ? $this->status->value : $this->status,
             'completed_at' => $this->completed_at?->toIso8601String(),
             'term' => new TermResource($this->whenLoaded('term')),
+            'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }

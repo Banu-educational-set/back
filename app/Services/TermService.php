@@ -17,6 +17,7 @@ class TermService
     {
         return Term::query()
             ->with('cover')
+            ->withCount(['courses', 'enrollments'])
             ->when($activeOnly, fn ($q) => $q->where('is_active', true))
             ->orderByDesc('id')
             ->paginate($perPage);

@@ -3,18 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Enums\RoleName;
 use App\Http\Requests\Course\StoreCourseRequest;
 use App\Http\Requests\Course\UpdateCourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use App\Services\CourseService;
+use App\Services\PrerequisiteService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    public function __construct(private readonly CourseService $courseService) {}
+    public function __construct(
+        private readonly CourseService $courseService,
+        private readonly PrerequisiteService $prerequisiteService,
+    ) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -28,9 +33,21 @@ class CourseController extends Controller
         return ApiResponse::success(CourseResource::collection($courses));
     }
 
-    public function show(Course $course): JsonResponse
+    public function show(Request $request, Course $course): JsonResponse
     {
-        return ApiResponse::success(new CourseResource($course->load(['term', 'teacher'])));
+        $user = $request->user();
+        if ($user && $user->hasRole(RoleName::Student->value) && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value])) {
+            $unmet = $this->prerequisiteService->courseUnmetPrerequisites($user, $course);
+            if ($unmet !== []) {
+                return ApiResponse::error(
+                    'Prerequisites not met for this course.',
+                    ['prerequisite_course_ids' => $unmet],
+                    403,
+                );
+            }
+        }
+
+        return ApiResponse::success(new CourseResource($course->load(['term', 'teacher'])->loadCount('sessions')));
     }
 
     public function store(StoreCourseRequest $request): JsonResponse

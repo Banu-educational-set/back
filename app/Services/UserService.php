@@ -13,9 +13,9 @@ class UserService
         return User::query()
             ->with(['roles', 'avatar'])
             ->when($search, fn ($q, $s) => $q->where(function ($q) use ($s) {
-                $q->where('name', 'ilike', "%{$s}%")
-                    ->orWhere('email', 'ilike', "%{$s}%")
-                    ->orWhere('phone', 'ilike', "%{$s}%");
+                $q->where('name', 'like', "%{$s}%")
+                    ->orWhere('email', 'like', "%{$s}%")
+                    ->orWhere('phone', 'like', "%{$s}%");
             }))
             ->orderByDesc('id')
             ->paginate($perPage);

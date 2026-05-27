@@ -28,6 +28,8 @@ class TermController extends Controller
 
     public function show(Term $term): JsonResponse
     {
+        $term->loadCount(['courses', 'enrollments']);
+
         return ApiResponse::success(new TermResource($term));
     }
 

@@ -23,11 +23,13 @@ class CourseSession extends Model
         'starts_at',
         'location',
         'link',
+        'prerequisite_session_ids',
     ];
 
     protected $casts = [
         'starts_at' => 'datetime',
         'type' => SessionType::class,
+        'prerequisite_session_ids' => 'array',
     ];
 
     public function course(): BelongsTo

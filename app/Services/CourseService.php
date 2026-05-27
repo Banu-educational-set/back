@@ -18,6 +18,7 @@ class CourseService
     {
         return Course::query()
             ->with(['term', 'teacher.avatar', 'cover'])
+            ->withCount('sessions')
             ->when($termId, fn ($q, $id) => $q->where('term_id', $id))
             ->when($orphansOnly, fn ($q) => $q->whereNull('term_id'))
             ->when(

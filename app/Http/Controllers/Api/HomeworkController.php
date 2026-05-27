@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\HomeworkSubmissionStatus;
+use App\Enums\RoleName;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Homework\ReviewSubmissionRequest;
 use App\Http\Requests\Homework\StoreHomeworkRequest;
@@ -10,13 +11,16 @@ use App\Http\Requests\Homework\SubmitHomeworkRequest;
 use App\Http\Requests\Homework\UpdateHomeworkRequest;
 use App\Http\Resources\HomeworkResource;
 use App\Http\Resources\HomeworkSubmissionResource;
+use App\Models\CourseSession;
 use App\Models\Homework;
 use App\Models\HomeworkSubmission;
 use App\Services\HomeworkReviewService;
 use App\Services\HomeworkService;
 use App\Services\HomeworkSubmissionService;
+use App\Services\PrerequisiteService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class HomeworkController extends Controller
 {
@@ -24,7 +28,45 @@ class HomeworkController extends Controller
         private readonly HomeworkSubmissionService $submissionService,
         private readonly HomeworkReviewService $reviewService,
         private readonly HomeworkService $homeworkService,
+        private readonly PrerequisiteService $prerequisiteService,
     ) {}
+
+    public function index(Request $request): JsonResponse
+    {
+        $homeworks = $this->homeworkService->paginate(
+            sessionId: $request->filled('session_id') ? (int) $request->input('session_id') : null,
+            courseId: $request->filled('course_id') ? (int) $request->input('course_id') : null,
+            perPage: (int) $request->integer('per_page', 20),
+        );
+
+        return ApiResponse::success(HomeworkResource::collection($homeworks));
+    }
+
+    public function forSession(Request $request, CourseSession $session): JsonResponse
+    {
+        $user = $request->user();
+        $isStudent = $user && $user->hasRole(RoleName::Student->value)
+            && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value]);
+
+        if ($isStudent) {
+            $unmet = $this->prerequisiteService->sessionUnmetPrerequisites($user, $session);
+            if ($unmet !== []) {
+                return ApiResponse::error(
+                    'Prerequisites not met for this session.',
+                    ['prerequisite_session_ids' => $unmet],
+                    403,
+                );
+            }
+        }
+
+        $homeworks = Homework::query()
+            ->where('session_id', $session->id)
+            ->when($isStudent, fn ($q) => $q->where('is_active', true))
+            ->orderByDesc('id')
+            ->paginate((int) $request->integer('per_page', 20));
+
+        return ApiResponse::success(HomeworkResource::collection($homeworks));
+    }
 
     public function store(StoreHomeworkRequest $request): JsonResponse
     {
