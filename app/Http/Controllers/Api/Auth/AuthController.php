@@ -57,7 +57,7 @@ class AuthController extends Controller
     public function me(Request $request): JsonResponse
     {
         return ApiResponse::success(
-            new UserResource($request->user()->load(['roles', 'avatar'])),
+            new UserResource($request->user()->load(['roles', 'avatar', 'province', 'city'])),
             'OK',
         );
     }
@@ -67,7 +67,7 @@ class AuthController extends Controller
         $user = $request->user();
         $validated = $request->validated();
 
-        $user->fill(Arr::only($validated, ['name', 'email', 'phone', 'password']))->save();
+        $user->fill(Arr::only($validated, ['name', 'email', 'phone', 'password', 'province_id', 'city_id']))->save();
 
         if ($mediaId = Arr::get($validated, 'avatar_media_id')) {
             $this->mediaService->attachTo(
@@ -80,7 +80,7 @@ class AuthController extends Controller
         }
 
         return ApiResponse::success(
-            new UserResource($user->fresh(['roles', 'avatar'])),
+            new UserResource($user->fresh(['roles', 'avatar', 'province', 'city'])),
             'Profile updated.',
         );
     }

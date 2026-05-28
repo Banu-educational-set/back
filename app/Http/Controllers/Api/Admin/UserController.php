@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Enums\RoleName;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AssignRoleRequest;
 use App\Http\Requests\Admin\StoreUserRequest;
@@ -21,8 +22,29 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
+        $rolesInput = $request->input('roles');
+        if (is_string($rolesInput)) {
+            $rolesInput = array_filter(array_map('trim', explode(',', $rolesInput)));
+        }
+        $roles = is_array($rolesInput) ? array_values(array_unique($rolesInput)) : null;
+
+        if ($roles !== null) {
+            $invalid = array_values(array_diff($roles, RoleName::values()));
+            if ($invalid !== []) {
+                return ApiResponse::error(
+                    'Invalid role(s): '.implode(', ', $invalid).'. Allowed: '.implode(', ', RoleName::values()).'.',
+                    ['roles' => ['Invalid value(s).']],
+                    422,
+                );
+            }
+            if ($roles === []) {
+                $roles = null;
+            }
+        }
+
         $users = $this->userService->paginate(
             search: $request->string('search')->toString() ?: null,
+            roles: $roles,
             perPage: (int) $request->integer('per_page', 20),
         );
 
@@ -33,7 +55,7 @@ class UserController extends Controller
     {
         $this->authorize('view', $user);
 
-        return ApiResponse::success(new UserResource($user->load('roles')));
+        return ApiResponse::success(new UserResource($user->load(['roles', 'avatar', 'province', 'city'])));
     }
 
     public function store(StoreUserRequest $request): JsonResponse

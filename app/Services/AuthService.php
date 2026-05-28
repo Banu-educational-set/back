@@ -28,13 +28,15 @@ class AuthService
             'phone' => $data['phone'],
             'email' => $data['email'] ?? null,
             'password' => $data['password'],
+            'province_id' => $data['province_id'] ?? null,
+            'city_id' => $data['city_id'] ?? null,
         ]);
 
         $user->assignRole(RoleName::Student->value);
 
         $token = $user->createToken($data['device_name'] ?? 'api')->plainTextToken;
 
-        return ['user' => $user->fresh('roles'), 'token' => $token];
+        return ['user' => $user->fresh(['roles', 'province', 'city']), 'token' => $token];
     }
 
     /**

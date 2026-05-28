@@ -41,7 +41,7 @@ class EnrollmentController extends Controller
     public function showTerm(Request $request, Term $term): JsonResponse
     {
         $enrollment = TermEnrollment::query()
-            ->with('term')
+            ->with(['term' => fn ($q) => $q->withCount(['courses', 'enrollments'])])
             ->where('user_id', $request->user()->id)
             ->where('term_id', $term->id)
             ->firstOrFail();

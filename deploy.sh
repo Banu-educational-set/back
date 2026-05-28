@@ -16,6 +16,9 @@ rsync -avz --delete \
   --exclude='node_modules' \
   --exclude='.git' \
   --exclude='.env' \
+  --exclude='public/storage' \
+  --exclude='storage/app/public/**' \
+  --exclude='storage/app/private/**' \
   --exclude='storage/logs/*' \
   --exclude='storage/framework/cache/*' \
   --exclude='storage/framework/sessions/*' \
@@ -35,6 +38,9 @@ case "$MODE" in
     ssh "$VPS" "cd $PROJECT_DIR && docker compose exec -T app composer install --no-dev --optimize-autoloader"
     ;;
 esac
+
+echo "==> Ensuring storage symlink + writable permissions"
+ssh "$VPS" "cd $PROJECT_DIR && docker compose exec -T app sh -c 'php artisan storage:link > /dev/null 2>&1 || true; chown -R www-data:www-data storage bootstrap/cache; chmod -R u+rwX,g+rwX storage bootstrap/cache'"
 
 echo "==> Clearing config cache"
 ssh "$VPS" "cd $PROJECT_DIR && docker compose exec -T app php artisan config:clear"

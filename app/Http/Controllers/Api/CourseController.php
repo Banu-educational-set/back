@@ -47,7 +47,10 @@ class CourseController extends Controller
             }
         }
 
-        return ApiResponse::success(new CourseResource($course->load(['term', 'teacher'])->loadCount('sessions')));
+        $course->load(['term', 'teacher'])->loadCount('sessions');
+        $this->courseService->attachPrerequisiteCourses(collect([$course]));
+
+        return ApiResponse::success(new CourseResource($course));
     }
 
     public function store(StoreCourseRequest $request): JsonResponse

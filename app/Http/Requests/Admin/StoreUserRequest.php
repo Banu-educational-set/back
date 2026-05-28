@@ -3,9 +3,11 @@
 namespace App\Http\Requests\Admin;
 
 use App\Enums\RoleName;
+use App\Models\City;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Validator;
 
 class StoreUserRequest extends FormRequest
 {
@@ -23,6 +25,25 @@ class StoreUserRequest extends FormRequest
             'password' => ['required', Password::min(8)],
             'roles' => ['array'],
             'roles.*' => ['string', Rule::in(RoleName::values())],
+            'province_id' => ['nullable', 'integer', 'exists:provinces,id'],
+            'city_id' => ['nullable', 'integer', 'exists:cities,id'],
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $v) {
+            if (! $this->filled('city_id') || ! $this->filled('province_id')) {
+                return;
+            }
+
+            $belongs = City::where('id', $this->integer('city_id'))
+                ->where('province_id', $this->integer('province_id'))
+                ->exists();
+
+            if (! $belongs) {
+                $v->errors()->add('city_id', 'City does not belong to the given province.');
+            }
+        });
     }
 }

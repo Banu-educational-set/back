@@ -16,7 +16,7 @@ class CourseSessionService
 
     public function paginate(?User $viewer, ?int $courseId, int $perPage = 20): LengthAwarePaginator
     {
-        return CourseSession::query()
+        $paginator = CourseSession::query()
             ->with('course')
             ->when($courseId, fn ($q, $id) => $q->where('course_id', $id))
             ->when(
@@ -25,6 +25,41 @@ class CourseSessionService
             )
             ->orderByDesc('id')
             ->paginate($perPage);
+
+        $this->attachPrerequisiteSessions($paginator->getCollection());
+
+        return $paginator;
+    }
+
+    /**
+     * Hydrate each session in the collection with its prerequisite_sessions
+     * relation, batching the load to avoid N+1.
+     *
+     * @param  \Illuminate\Support\Collection<int, CourseSession>|iterable<CourseSession>  $sessions
+     */
+    public function attachPrerequisiteSessions($sessions): void
+    {
+        $allIds = collect($sessions)
+            ->flatMap(fn (CourseSession $s) => is_array($s->prerequisite_session_ids) ? $s->prerequisite_session_ids : [])
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values();
+
+        $byId = $allIds->isEmpty()
+            ? collect()
+            : CourseSession::query()
+                ->whereIn('id', $allIds)
+                ->with('course')
+                ->get()
+                ->keyBy('id');
+
+        foreach ($sessions as $session) {
+            $ids = is_array($session->prerequisite_session_ids) ? $session->prerequisite_session_ids : [];
+            $session->setRelation(
+                'prerequisiteSessions',
+                collect($ids)->map(fn ($id) => $byId->get((int) $id))->filter()->values(),
+            );
+        }
     }
 
     public function create(array $data, ?User $uploader = null): CourseSession

@@ -10,9 +10,10 @@ use App\Http\Controllers\Api\CourseSessionController;
 use App\Http\Controllers\Api\ExamController;
 use App\Http\Controllers\Api\External\MissionaryRequestController as ExternalMissionaryRequestController;
 use App\Http\Controllers\Api\HomeworkController;
+use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\MediaController;
-use App\Http\Controllers\Api\RegisterDataController;
 use App\Http\Controllers\Api\Missionary\RequestController as MissionaryRequestController;
+use App\Http\Controllers\Api\RegisterDataController;
 use App\Http\Controllers\Api\Staff\TicketController as StaffTicketController;
 use App\Http\Controllers\Api\Student\EnrollmentController;
 use App\Http\Controllers\Api\Student\ResultsController as StudentResultsController;
@@ -21,6 +22,12 @@ use App\Http\Controllers\Api\TermController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/ping', fn () => response()->json(['success' => true, 'message' => 'pong', 'data' => null]));
+
+/*
+ * Locations (public — needed by the registration form)
+ */
+Route::get('provinces', [LocationController::class, 'provinces']);
+Route::get('provinces/{province}/cities', [LocationController::class, 'cities']);
 
 /*
  * Auth (public)

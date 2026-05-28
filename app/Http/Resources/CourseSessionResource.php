@@ -20,6 +20,7 @@ class CourseSessionResource extends JsonResource
             'location' => $this->location,
             'link' => $this->link,
             'prerequisite_session_ids' => array_values(array_map('intval', $this->prerequisite_session_ids ?? [])),
+            'prerequisite_sessions' => CourseSessionResource::collection($this->whenLoaded('prerequisiteSessions')),
             'media' => MediaResource::collection($this->whenLoaded('media')),
             'course' => new CourseResource($this->whenLoaded('course')),
         ];

@@ -47,7 +47,7 @@ class EnrollmentService
     public function paginateForUser(User $user, ?string $status, int $perPage = 20): LengthAwarePaginator
     {
         return TermEnrollment::query()
-            ->with('term')
+            ->with(['term' => fn ($q) => $q->withCount(['courses', 'enrollments'])])
             ->where('user_id', $user->id)
             ->when($status, fn ($q, $s) => $q->where('status', $s))
             ->orderByDesc('id')

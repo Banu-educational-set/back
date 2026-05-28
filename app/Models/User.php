@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasMedia;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,7 +18,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasMedia, HasRoles, Notifiable;
 
-    protected $fillable = ['name', 'email', 'phone', 'password'];
+    protected $fillable = ['name', 'email', 'phone', 'password', 'province_id', 'city_id'];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -65,5 +66,15 @@ class User extends Authenticatable
         return $this->morphOne(Media::class, 'model')
             ->where('collection_name', 'avatar')
             ->latestOfMany();
+    }
+
+    public function province(): BelongsTo
+    {
+        return $this->belongsTo(Province::class);
+    }
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
     }
 }

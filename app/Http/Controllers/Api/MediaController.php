@@ -66,13 +66,19 @@ class MediaController extends Controller
      */
     public function download(Request $request, Media $medium): StreamedResponse|JsonResponse
     {
-        $owner = $medium->model;
-        if ($owner === null) {
-            return ApiResponse::error('Resource not found.', null, 404);
-        }
-
         $user = $request->user();
-        if (! $this->canDownload($user, $owner)) {
+        $owner = $medium->model;
+
+        // Pending uploads (not yet attached to any model): only the uploader
+        // and admins can preview/download.
+        if ($owner === null) {
+            $canAccessPending = $user->hasRole(RoleName::Admin->value)
+                || $medium->uploaded_by === $user->id;
+
+            if (! $canAccessPending) {
+                return ApiResponse::error('Forbidden.', null, 403);
+            }
+        } elseif (! $this->canDownload($user, $owner)) {
             return ApiResponse::error('Forbidden.', null, 403);
         }
 

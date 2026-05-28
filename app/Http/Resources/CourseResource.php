@@ -20,6 +20,7 @@ class CourseResource extends JsonResource
             'cover_url' => $this->cover?->url(),
             'sessions_count' => $this->when(isset($this->sessions_count), (int) $this->sessions_count),
             'prerequisite_course_ids' => array_values(array_map('intval', $this->prerequisite_course_ids ?? [])),
+            'prerequisite_courses' => CourseResource::collection($this->whenLoaded('prerequisiteCourses')),
             'term' => new TermResource($this->whenLoaded('term')),
             'teacher' => new UserResource($this->whenLoaded('teacher')),
         ];

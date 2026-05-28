@@ -46,7 +46,10 @@ class CourseSessionController extends Controller
             }
         }
 
-        return ApiResponse::success(new CourseSessionResource($session->load(['course', 'media'])));
+        $session->load(['course', 'media']);
+        $this->sessionService->attachPrerequisiteSessions(collect([$session]));
+
+        return ApiResponse::success(new CourseSessionResource($session));
     }
 
     public function store(StoreSessionRequest $request): JsonResponse
