@@ -36,7 +36,14 @@ class CourseController extends Controller
     public function show(Request $request, Course $course): JsonResponse
     {
         $user = $request->user();
-        if ($user && $user->hasRole(RoleName::Student->value) && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value])) {
+        $isStudent = $user && $user->hasRole(RoleName::Student->value)
+            && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value]);
+
+        if ($isStudent) {
+            if ($course->term_id && ! $course->term?->isOpenNow()) {
+                return ApiResponse::error('This term is not currently open.', null, 403);
+            }
+
             $unmet = $this->prerequisiteService->courseUnmetPrerequisites($user, $course);
             if ($unmet !== []) {
                 return ApiResponse::error(

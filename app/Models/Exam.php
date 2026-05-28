@@ -11,11 +11,14 @@ class Exam extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['session_id', 'title', 'description', 'pass_score', 'is_active'];
+    protected $fillable = ['session_id', 'title', 'description', 'score', 'minimum_score', 'duration_minutes', 'is_active', 'is_random'];
 
     protected $casts = [
-        'pass_score' => 'integer',
+        'score' => 'integer',
+        'minimum_score' => 'integer',
+        'duration_minutes' => 'integer',
         'is_active' => 'boolean',
+        'is_random' => 'boolean',
     ];
 
     public function session(): BelongsTo
@@ -33,8 +36,4 @@ class Exam extends Model
         return $this->hasMany(ExamAttempt::class);
     }
 
-    public function effectivePassScore(): int
-    {
-        return (int) ($this->pass_score ?? config('education.default_exam_pass_score'));
-    }
 }

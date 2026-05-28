@@ -13,6 +13,58 @@ class ExamScoringService
     public function __construct(private readonly TermCompletionService $completionService) {}
 
     /**
+     * Begin (or resume) an attempt for the user on this exam. Idempotent
+     * while an un-submitted attempt exists. Errors if the user has already
+     * passed, or the term is not currently open.
+     */
+    public function start(User $user, Exam $exam): ExamAttempt
+    {
+        $exam->loadMissing(['session.course.term', 'questions']);
+
+        $term = $exam->session?->course?->term;
+        if ($term && ! $term->isOpenNow()) {
+            throw new RuntimeException('This term is not currently open.');
+        }
+
+        $questionSum = (int) $exam->questions->sum('score');
+        if ($questionSum !== (int) $exam->score) {
+            throw new RuntimeException(sprintf(
+                'Exam is misconfigured: sum of question scores (%d) does not equal exam score (%d).',
+                $questionSum,
+                (int) $exam->score,
+            ));
+        }
+
+        $alreadyPassed = ExamAttempt::query()
+            ->where('user_id', $user->id)
+            ->where('exam_id', $exam->id)
+            ->where('is_passed', true)
+            ->exists();
+        if ($alreadyPassed) {
+            throw new RuntimeException('You have already passed this exam.');
+        }
+
+        $existing = ExamAttempt::query()
+            ->where('user_id', $user->id)
+            ->where('exam_id', $exam->id)
+            ->whereNull('submitted_at')
+            ->latest('id')
+            ->first();
+
+        if ($existing) {
+            return $existing;
+        }
+
+        return ExamAttempt::create([
+            'user_id' => $user->id,
+            'exam_id' => $exam->id,
+            'started_at' => now(),
+            'score' => 0,
+            'is_passed' => false,
+        ]);
+    }
+
+    /**
      * Submit and auto-score an exam attempt.
      *
      * @param  array<int, array{question_id: int, selected_option_id: int|null}>  $answers
@@ -34,6 +86,21 @@ class ExamScoringService
             ->exists();
         if ($alreadyPassed) {
             throw new RuntimeException('You have already passed this exam.');
+        }
+
+        $activeAttempt = ExamAttempt::query()
+            ->where('user_id', $user->id)
+            ->where('exam_id', $exam->id)
+            ->whereNull('submitted_at')
+            ->latest('id')
+            ->first();
+        if (! $activeAttempt) {
+            throw new RuntimeException('You must start the exam before submitting.');
+        }
+
+        $deadline = $activeAttempt->deadline_at;
+        if ($deadline && now()->gt($deadline)) {
+            throw new RuntimeException('The exam window has closed.');
         }
 
         $optionByQuestion = [];
@@ -61,23 +128,25 @@ class ExamScoringService
             $cleanAnswers[$qid] = $oid;
         }
 
-        $correctCount = 0;
+        $scoreByQuestion = [];
+        foreach ($exam->questions as $question) {
+            $scoreByQuestion[$question->id] = (int) $question->score;
+        }
+
+        $score = 0;
         foreach ($questionIds as $qid) {
             if (
                 isset($cleanAnswers[$qid], $correctOptionByQuestion[$qid])
                 && $cleanAnswers[$qid] === $correctOptionByQuestion[$qid]
             ) {
-                $correctCount++;
+                $score += $scoreByQuestion[$qid] ?? 0;
             }
         }
 
-        $score = (int) round(($correctCount / count($questionIds)) * 100);
-        $isPassed = $score >= $exam->effectivePassScore();
+        $isPassed = $score >= (int) $exam->minimum_score;
 
-        $attempt = DB::transaction(function () use ($user, $exam, $cleanAnswers, $correctOptionByQuestion, $score, $isPassed) {
-            $attempt = ExamAttempt::create([
-                'user_id' => $user->id,
-                'exam_id' => $exam->id,
+        $attempt = DB::transaction(function () use ($activeAttempt, $cleanAnswers, $correctOptionByQuestion, $score, $isPassed) {
+            $activeAttempt->update([
                 'score' => $score,
                 'is_passed' => $isPassed,
                 'submitted_at' => now(),
@@ -86,7 +155,7 @@ class ExamScoringService
             $rows = [];
             foreach ($cleanAnswers as $qid => $oid) {
                 $rows[] = [
-                    'attempt_id' => $attempt->id,
+                    'attempt_id' => $activeAttempt->id,
                     'question_id' => $qid,
                     'selected_option_id' => $oid,
                     'is_correct' => isset($correctOptionByQuestion[$qid]) && $oid === $correctOptionByQuestion[$qid],
@@ -98,7 +167,7 @@ class ExamScoringService
                 DB::table('exam_answers')->insert($rows);
             }
 
-            return $attempt->load('answers');
+            return $activeAttempt->fresh('answers');
         });
 
         if ($isPassed) {

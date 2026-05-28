@@ -11,7 +11,12 @@ class ExamQuestion extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['exam_id', 'question_text', 'position'];
+    protected $fillable = ['exam_id', 'question_text', 'position', 'score'];
+
+    protected $casts = [
+        'score' => 'integer',
+        'position' => 'integer',
+    ];
 
     public function exam(): BelongsTo
     {

@@ -41,10 +41,12 @@ class TermCompletionService
             }
         }
 
+        // Only priority homeworks block term completion; non-priority ones are optional.
         $homeworkIds = DB::table('homeworks')
             ->join('course_sessions', 'course_sessions.id', '=', 'homeworks.session_id')
             ->join('courses', 'courses.id', '=', 'course_sessions.course_id')
             ->where('courses.term_id', $termId)
+            ->where('homeworks.is_priority', true)
             ->pluck('homeworks.id');
 
         if ($homeworkIds->isNotEmpty()) {

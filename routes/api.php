@@ -79,6 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('sessions/{session}/exams', [ExamController::class, 'forSession']);
     Route::get('sessions/{session}/homeworks', [HomeworkController::class, 'forSession']);
     Route::get('exams/{exam}', [ExamController::class, 'show']);
+    Route::get('homeworks/{homework}', [HomeworkController::class, 'show']);
 
     // Authenticated download endpoint for files (works for all disks).
     Route::get('media/{medium}/download', [MediaController::class, 'download'])->name('media.download');
@@ -116,6 +117,9 @@ Route::middleware([
     Route::get('terms/{term}/attendees', [AttendanceController::class, 'term']);
     Route::get('courses/{course}/attendees', [AttendanceController::class, 'course']);
     Route::get('sessions/{session}/attendees', [AttendanceController::class, 'session']);
+
+    Route::get('homeworks/{homework}/submissions', [HomeworkController::class, 'submissions']);
+    Route::get('exams/{exam}/attempts', [ExamController::class, 'attempts']);
 });
 
 /*
@@ -136,6 +140,7 @@ Route::middleware([
     'auth:sanctum',
     'role:'.RoleName::Student->value.'|'.RoleName::Missionary->value,
 ])->group(function () {
+    Route::post('exams/{exam}/start', [ExamController::class, 'start']);
     Route::post('exams/{exam}/submit', [ExamController::class, 'submit']);
     Route::post('homeworks/{homework}/submit', [HomeworkController::class, 'submit']);
 

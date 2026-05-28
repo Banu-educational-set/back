@@ -3346,7 +3346,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"course_id\": 1,\n        \"title\": \"Week 1 — Overview\",\n        \"description\": \"Opening session.\",\n        \"type\": \"online\",\n        \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n        \"location\": null,\n        \"link\": \"https://meet.example.com/abc\",\n        \"prerequisite_session_ids\": [],\n        \"prerequisite_sessions\": []\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"course_id\": 1,\n        \"title\": \"Week 1 — Overview\",\n        \"description\": \"Opening session.\",\n        \"type\": \"online\",\n        \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n        \"location\": null,\n        \"link\": \"https://meet.example.com/abc\",\n        \"prerequisite_session_ids\": [],\n        \"prerequisite_sessions\": [],\n        \"course\": {\n          \"id\": 1,\n          \"term_id\": 1,\n          \"teacher_id\": 2,\n          \"title\": \"Intro to Theology\",\n          \"description\": \"Foundational course.\",\n          \"capacity\": 50,\n          \"is_active\": true,\n          \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n          \"sessions_count\": 12,\n          \"prerequisite_course_ids\": [],\n          \"term\": {\n            \"id\": 1,\n            \"title\": \"Spring 2026\",\n            \"description\": \"Spring term covering intro & intermediate units.\",\n            \"is_active\": true,\n            \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n            \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n            \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n            \"courses_count\": 4,\n            \"students_count\": 27,\n            \"created_at\": \"2026-02-01T10:00:00+00:00\"\n          }\n        }\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
             }
           ]
         },
@@ -3403,7 +3403,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"id\": 1,\n    \"course_id\": 1,\n    \"title\": \"Week 1 — Overview\",\n    \"description\": \"Opening session.\",\n    \"type\": \"online\",\n    \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n    \"location\": null,\n    \"link\": \"https://meet.example.com/abc\",\n    \"prerequisite_session_ids\": [\n      2\n    ],\n    \"prerequisite_sessions\": [\n      {\n        \"id\": 2,\n        \"course_id\": 1,\n        \"title\": \"Week 0 — Orientation\",\n        \"description\": \"Mandatory intro.\",\n        \"type\": \"online\",\n        \"starts_at\": \"2026-03-18T18:00:00+03:30\",\n        \"location\": null,\n        \"link\": \"https://meet.example.com/orientation\",\n        \"prerequisite_session_ids\": []\n      }\n    ],\n    \"media\": [\n      {\n        \"id\": 15,\n        \"collection_name\": \"attachments\",\n        \"file_name\": \"week-1-slides.pdf\",\n        \"mime_type\": \"application/pdf\",\n        \"file_size\": 204800,\n        \"url\": \"http://localhost:8080/storage/sessions/1/slides.pdf\",\n        \"download_url\": \"http://localhost:8080/api/media/15/download\"\n      }\n    ],\n    \"course\": {\n      \"id\": 1,\n      \"term_id\": 1,\n      \"teacher_id\": 2,\n      \"title\": \"Intro to Theology\",\n      \"description\": \"Foundational course.\",\n      \"capacity\": 50,\n      \"is_active\": true,\n      \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\"\n    }\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"id\": 1,\n    \"course_id\": 1,\n    \"title\": \"Week 1 — Overview\",\n    \"description\": \"Opening session.\",\n    \"type\": \"online\",\n    \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n    \"location\": null,\n    \"link\": \"https://meet.example.com/abc\",\n    \"prerequisite_session_ids\": [\n      2\n    ],\n    \"prerequisite_sessions\": [\n      {\n        \"id\": 2,\n        \"course_id\": 1,\n        \"title\": \"Week 0 — Orientation\",\n        \"description\": \"Mandatory intro.\",\n        \"type\": \"online\",\n        \"starts_at\": \"2026-03-18T18:00:00+03:30\",\n        \"location\": null,\n        \"link\": \"https://meet.example.com/orientation\",\n        \"prerequisite_session_ids\": [],\n        \"course\": {\n          \"id\": 1,\n          \"term_id\": 1,\n          \"teacher_id\": 2,\n          \"title\": \"Intro to Theology\",\n          \"description\": \"Foundational course.\",\n          \"capacity\": 50,\n          \"is_active\": true,\n          \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n          \"sessions_count\": 12,\n          \"prerequisite_course_ids\": [],\n          \"term\": {\n            \"id\": 1,\n            \"title\": \"Spring 2026\",\n            \"description\": \"Spring term covering intro & intermediate units.\",\n            \"is_active\": true,\n            \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n            \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n            \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n            \"courses_count\": 4,\n            \"students_count\": 27,\n            \"created_at\": \"2026-02-01T10:00:00+00:00\"\n          }\n        }\n      }\n    ],\n    \"media\": [\n      {\n        \"id\": 15,\n        \"collection_name\": \"attachments\",\n        \"file_name\": \"week-1-slides.pdf\",\n        \"mime_type\": \"application/pdf\",\n        \"file_size\": 204800,\n        \"url\": \"http://localhost:8080/storage/sessions/1/slides.pdf\",\n        \"download_url\": \"http://localhost:8080/api/media/15/download\"\n      }\n    ],\n    \"course\": {\n      \"id\": 1,\n      \"term_id\": 1,\n      \"teacher_id\": 2,\n      \"title\": \"Intro to Theology\",\n      \"description\": \"Foundational course.\",\n      \"capacity\": 50,\n      \"is_active\": true,\n      \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n      \"sessions_count\": 12,\n      \"prerequisite_course_ids\": [],\n      \"term\": {\n        \"id\": 1,\n        \"title\": \"Spring 2026\",\n        \"description\": \"Spring term covering intro & intermediate units.\",\n        \"is_active\": true,\n        \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n        \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n        \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n        \"courses_count\": 4,\n        \"students_count\": 27,\n        \"created_at\": \"2026-02-01T10:00:00+00:00\"\n      }\n    }\n  }\n}"
             },
             {
               "name": "404 — Not found",
@@ -3541,7 +3541,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Session created.\",\n  \"data\": {\n    \"id\": 1,\n    \"course_id\": 1,\n    \"title\": \"Week 1 — Overview\",\n    \"description\": \"Opening session.\",\n    \"type\": \"online\",\n    \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n    \"location\": null,\n    \"link\": \"https://meet.example.com/abc\"\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"Session created.\",\n  \"data\": {\n    \"id\": 1,\n    \"course_id\": 1,\n    \"title\": \"Week 1 — Overview\",\n    \"description\": \"Opening session.\",\n    \"type\": \"online\",\n    \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n    \"location\": null,\n    \"link\": \"https://meet.example.com/abc\",\n    \"course\": {\n      \"id\": 1,\n      \"term_id\": 1,\n      \"teacher_id\": 2,\n      \"title\": \"Intro to Theology\",\n      \"description\": \"Foundational course.\",\n      \"capacity\": 50,\n      \"is_active\": true,\n      \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n      \"sessions_count\": 12,\n      \"prerequisite_course_ids\": [],\n      \"term\": {\n        \"id\": 1,\n        \"title\": \"Spring 2026\",\n        \"description\": \"Spring term covering intro & intermediate units.\",\n        \"is_active\": true,\n        \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n        \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n        \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n        \"courses_count\": 4,\n        \"students_count\": 27,\n        \"created_at\": \"2026-02-01T10:00:00+00:00\"\n      }\n    }\n  }\n}"
             },
             {
               "name": "422 — Validation error",
@@ -3654,7 +3654,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Session updated.\",\n  \"data\": {\n    \"id\": 1,\n    \"course_id\": 1,\n    \"title\": \"Week 1 — Overview (rescheduled)\",\n    \"description\": \"Opening session.\",\n    \"type\": \"online\",\n    \"starts_at\": \"2026-03-26T18:00:00+03:30\",\n    \"location\": null,\n    \"link\": \"https://meet.example.com/abc\"\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"Session updated.\",\n  \"data\": {\n    \"id\": 1,\n    \"course_id\": 1,\n    \"title\": \"Week 1 — Overview (rescheduled)\",\n    \"description\": \"Opening session.\",\n    \"type\": \"online\",\n    \"starts_at\": \"2026-03-26T18:00:00+03:30\",\n    \"location\": null,\n    \"link\": \"https://meet.example.com/abc\",\n    \"course\": {\n      \"id\": 1,\n      \"term_id\": 1,\n      \"teacher_id\": 2,\n      \"title\": \"Intro to Theology\",\n      \"description\": \"Foundational course.\",\n      \"capacity\": 50,\n      \"is_active\": true,\n      \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n      \"sessions_count\": 12,\n      \"prerequisite_course_ids\": [],\n      \"term\": {\n        \"id\": 1,\n        \"title\": \"Spring 2026\",\n        \"description\": \"Spring term covering intro & intermediate units.\",\n        \"is_active\": true,\n        \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n        \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n        \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n        \"courses_count\": 4,\n        \"students_count\": 27,\n        \"created_at\": \"2026-02-01T10:00:00+00:00\"\n      }\n    }\n  }\n}"
             }
           ]
         },
@@ -3837,7 +3837,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/admin/exams?session_id={{session_id}}&course_id={{course_id}}&per_page=20",
+              "raw": "{{base_url}}/admin/exams?term_id={{term_id}}&course_id={{course_id}}&session_id={{session_id}}&per_page=20",
               "host": [
                 "{{base_url}}"
               ],
@@ -3847,9 +3847,9 @@
               ],
               "query": [
                 {
-                  "key": "session_id",
-                  "value": "{{session_id}}",
-                  "description": "Optional. Filter exams by session."
+                  "key": "term_id",
+                  "value": "{{term_id}}",
+                  "description": "Optional. Filter exams by term (via session → course → term)."
                 },
                 {
                   "key": "course_id",
@@ -3857,12 +3857,17 @@
                   "description": "Optional. Filter exams by the course of their session."
                 },
                 {
+                  "key": "session_id",
+                  "value": "{{session_id}}",
+                  "description": "Optional. Filter exams by session."
+                },
+                {
                   "key": "per_page",
                   "value": "20"
                 }
               ]
             },
-            "description": "Admin-only. Paginated list of all exams. Both filters are optional and can be combined. Questions are not included in the list payload."
+            "description": "Admin-only. Paginated list of all exams. All three filters (term_id, course_id, session_id) are optional and can be combined for the cascading term → course → session UI. Questions are not included in the list payload."
           },
           "response": [
             {
@@ -3906,7 +3911,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"session_id\": 1,\n        \"title\": \"Mid-term Exam\",\n        \"description\": \"Covers weeks 1-4.\",\n        \"pass_score\": 70\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"session_id\": 1,\n        \"title\": \"Mid-term Exam\",\n        \"description\": \"Covers weeks 1-4.\",\n        \"score\": 100,\n        \"minimum_score\": 70,\n        \"duration_minutes\": 30,\n        \"is_random\": false,\n        \"submitters_count\": 5,\n        \"questions_count\": 5,\n        \"created_at\": \"2026-04-01T10:00:00+00:00\",\n        \"session\": {\n          \"id\": 1,\n          \"course_id\": 1,\n          \"title\": \"Week 1 — Overview\",\n          \"description\": \"Opening session.\",\n          \"type\": \"online\",\n          \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n          \"location\": null,\n          \"link\": \"https://meet.example.com/abc\",\n          \"prerequisite_session_ids\": [],\n          \"course\": {\n            \"id\": 1,\n            \"term_id\": 1,\n            \"teacher_id\": 2,\n            \"title\": \"Intro to Theology\",\n            \"description\": \"Foundational course.\",\n            \"capacity\": 50,\n            \"is_active\": true,\n            \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n            \"sessions_count\": 12,\n            \"prerequisite_course_ids\": [],\n            \"term\": {\n              \"id\": 1,\n              \"title\": \"Spring 2026\",\n              \"description\": \"Spring term covering intro & intermediate units.\",\n              \"is_active\": true,\n              \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n              \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n              \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n              \"courses_count\": 4,\n              \"students_count\": 27,\n              \"created_at\": \"2026-02-01T10:00:00+00:00\"\n            }\n          }\n        }\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
             },
             {
               "name": "403 — Forbidden",
@@ -4011,7 +4016,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"session_id\": 1,\n        \"title\": \"Mid-term Exam\",\n        \"description\": \"Covers weeks 1-4.\",\n        \"pass_score\": 70\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"session_id\": 1,\n        \"title\": \"Mid-term Exam\",\n        \"description\": \"Covers weeks 1-4.\",\n        \"score\": 100,\n        \"minimum_score\": 70,\n        \"duration_minutes\": 30,\n        \"is_random\": false,\n        \"submitters_count\": 5,\n        \"questions_count\": 5,\n        \"created_at\": \"2026-04-01T10:00:00+00:00\",\n        \"session\": {\n          \"id\": 1,\n          \"course_id\": 1,\n          \"title\": \"Week 1 — Overview\",\n          \"description\": \"Opening session.\",\n          \"type\": \"online\",\n          \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n          \"location\": null,\n          \"link\": \"https://meet.example.com/abc\",\n          \"prerequisite_session_ids\": [],\n          \"course\": {\n            \"id\": 1,\n            \"term_id\": 1,\n            \"teacher_id\": 2,\n            \"title\": \"Intro to Theology\",\n            \"description\": \"Foundational course.\",\n            \"capacity\": 50,\n            \"is_active\": true,\n            \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n            \"sessions_count\": 12,\n            \"prerequisite_course_ids\": [],\n            \"term\": {\n              \"id\": 1,\n              \"title\": \"Spring 2026\",\n              \"description\": \"Spring term covering intro & intermediate units.\",\n              \"is_active\": true,\n              \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n              \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n              \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n              \"courses_count\": 4,\n              \"students_count\": 27,\n              \"created_at\": \"2026-02-01T10:00:00+00:00\"\n            }\n          }\n        }\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
             },
             {
               "name": "403 — Prerequisites not met",
@@ -4103,7 +4108,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Mid-term Exam\",\n    \"description\": \"Covers weeks 1-4.\",\n    \"pass_score\": 70,\n    \"questions\": [\n      {\n        \"id\": 1,\n        \"question_text\": \"What does the Greek word agape mean?\",\n        \"position\": 1,\n        \"options\": [\n          {\n            \"id\": 1,\n            \"option_text\": \"Romantic love\"\n          },\n          {\n            \"id\": 2,\n            \"option_text\": \"Selfless love\"\n          },\n          {\n            \"id\": 3,\n            \"option_text\": \"Friendship\"\n          },\n          {\n            \"id\": 4,\n            \"option_text\": \"Family love\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Mid-term Exam\",\n    \"description\": \"Covers weeks 1-4.\",\n    \"score\": 100,\n    \"minimum_score\": 70,\n    \"duration_minutes\": 30,\n    \"is_random\": false,\n    \"submitters_count\": 5,\n    \"questions_count\": 5,\n    \"created_at\": \"2026-04-01T10:00:00+00:00\",\n    \"session\": {\n      \"id\": 1,\n      \"course_id\": 1,\n      \"title\": \"Week 1 — Overview\",\n      \"description\": \"Opening session.\",\n      \"type\": \"online\",\n      \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n      \"location\": null,\n      \"link\": \"https://meet.example.com/abc\",\n      \"prerequisite_session_ids\": [],\n      \"course\": {\n        \"id\": 1,\n        \"term_id\": 1,\n        \"teacher_id\": 2,\n        \"title\": \"Intro to Theology\",\n        \"description\": \"Foundational course.\",\n        \"capacity\": 50,\n        \"is_active\": true,\n        \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n        \"sessions_count\": 12,\n        \"prerequisite_course_ids\": [],\n        \"term\": {\n          \"id\": 1,\n          \"title\": \"Spring 2026\",\n          \"description\": \"Spring term covering intro & intermediate units.\",\n          \"is_active\": true,\n          \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n          \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n          \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n          \"courses_count\": 4,\n          \"students_count\": 27,\n          \"created_at\": \"2026-02-01T10:00:00+00:00\"\n        }\n      }\n    },\n    \"questions\": [\n      {\n        \"id\": 1,\n        \"question_text\": \"What does the Greek word agape mean?\",\n        \"position\": 1,\n        \"score\": 25,\n        \"options\": [\n          {\n            \"id\": 1,\n            \"option_text\": \"Romantic love\"\n          },\n          {\n            \"id\": 2,\n            \"option_text\": \"Selfless love\"\n          },\n          {\n            \"id\": 3,\n            \"option_text\": \"Friendship\"\n          },\n          {\n            \"id\": 4,\n            \"option_text\": \"Family love\"\n          }\n        ]\n      }\n    ]\n  }\n}"
             },
             {
               "name": "403 — Forbidden",
@@ -4141,6 +4146,78 @@
           ]
         },
         {
+          "name": "Exam Attempts (admin/teacher)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/exams/{{exam_id}}/attempts?per_page=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "exams",
+                "{{exam_id}}",
+                "attempts"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Admin/teacher only. Paginated list of all attempts on this exam, with the attempting user embedded. Multiple rows per user possible (each attempt is its own row). Use submitters_count on the exam itself for the distinct-user count."
+          },
+          "response": [
+            {
+              "name": "200 — Paginated",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/exams/{{exam_id}}/attempts?per_page=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "exams",
+                    "{{exam_id}}",
+                    "attempts"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 14,\n        \"exam_id\": 1,\n        \"score\": 85,\n        \"is_passed\": true,\n        \"started_at\": \"2026-04-12T15:00:00+03:30\",\n        \"submitted_at\": \"2026-04-12T15:30:00+03:30\",\n        \"deadline_at\": \"2026-04-12T15:30:00+03:30\",\n        \"user\": {\n          \"id\": 5,\n          \"name\": \"Jane Student\",\n          \"email\": \"jane.student@example.com\",\n          \"phone\": \"+989121234567\",\n          \"province_id\": 8,\n          \"city_id\": 47,\n          \"province\": {\n            \"id\": 8,\n            \"name\": \"تهران\"\n          },\n          \"city\": {\n            \"id\": 47,\n            \"province_id\": 8,\n            \"name\": \"تهران\"\n          },\n          \"roles\": [\n            \"student\"\n          ],\n          \"avatar_url\": null,\n          \"avatar_download_url\": null,\n          \"created_at\": \"2026-02-01T10:00:00+00:00\"\n        }\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
           "name": "Create Exam (admin/teacher)",
           "request": {
             "method": "POST",
@@ -4165,7 +4242,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"session_id\": 1,\n  \"title\": \"Mid-term Exam\",\n  \"description\": \"Covers weeks 1-4.\",\n  \"pass_score\": 70,\n  \"is_active\": true\n}"
+              "raw": "{\n  \"session_id\": 1,\n  \"title\": \"Mid-term Exam\",\n  \"description\": \"Covers weeks 1-4.\",\n  \"is_active\": true,\n  \"is_random\": false,\n  \"score\": 100,\n  \"minimum_score\": 70\n}"
             }
           },
           "response": [
@@ -4194,7 +4271,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"session_id\": 1,\n  \"title\": \"Mid-term Exam\",\n  \"description\": \"Covers weeks 1-4.\",\n  \"pass_score\": 70,\n  \"is_active\": true\n}"
+                  "raw": "{\n  \"session_id\": 1,\n  \"title\": \"Mid-term Exam\",\n  \"description\": \"Covers weeks 1-4.\",\n  \"is_active\": true,\n  \"is_random\": false,\n  \"score\": 100,\n  \"minimum_score\": 70\n}"
                 }
               },
               "status": "Created",
@@ -4207,7 +4284,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Exam created.\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Mid-term Exam\",\n    \"description\": \"Covers weeks 1-4.\",\n    \"pass_score\": 70,\n    \"questions\": []\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"Exam created.\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Mid-term Exam\",\n    \"description\": \"Covers weeks 1-4.\",\n    \"score\": 100,\n    \"minimum_score\": 70,\n    \"duration_minutes\": 30,\n    \"is_random\": false,\n    \"submitters_count\": 5,\n    \"questions_count\": 5,\n    \"created_at\": \"2026-04-01T10:00:00+00:00\",\n    \"session\": {\n      \"id\": 1,\n      \"course_id\": 1,\n      \"title\": \"Week 1 — Overview\",\n      \"description\": \"Opening session.\",\n      \"type\": \"online\",\n      \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n      \"location\": null,\n      \"link\": \"https://meet.example.com/abc\",\n      \"prerequisite_session_ids\": [],\n      \"course\": {\n        \"id\": 1,\n        \"term_id\": 1,\n        \"teacher_id\": 2,\n        \"title\": \"Intro to Theology\",\n        \"description\": \"Foundational course.\",\n        \"capacity\": 50,\n        \"is_active\": true,\n        \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n        \"sessions_count\": 12,\n        \"prerequisite_course_ids\": [],\n        \"term\": {\n          \"id\": 1,\n          \"title\": \"Spring 2026\",\n          \"description\": \"Spring term covering intro & intermediate units.\",\n          \"is_active\": true,\n          \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n          \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n          \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n          \"courses_count\": 4,\n          \"students_count\": 27,\n          \"created_at\": \"2026-02-01T10:00:00+00:00\"\n        }\n      }\n    },\n    \"questions\": []\n  }\n}"
             }
           ]
         },
@@ -4237,7 +4314,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Mid-term Exam (v2)\",\n  \"pass_score\": 75\n}"
+              "raw": "{\n  \"title\": \"Mid-term Exam (v2)\",\n  \"is_random\": false\n}"
             }
           },
           "response": [
@@ -4267,7 +4344,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"title\": \"Mid-term Exam (v2)\",\n  \"pass_score\": 75\n}"
+                  "raw": "{\n  \"title\": \"Mid-term Exam (v2)\",\n  \"is_random\": false,\n  \"score\": 100,\n  \"minimum_score\": 70\n}"
                 }
               },
               "status": "OK",
@@ -4280,7 +4357,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Exam updated.\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Mid-term Exam (v2)\",\n    \"description\": \"Covers weeks 1-4.\",\n    \"pass_score\": 75,\n    \"questions\": [\n      {\n        \"id\": 1,\n        \"question_text\": \"What does the Greek word agape mean?\",\n        \"position\": 1,\n        \"options\": [\n          {\n            \"id\": 1,\n            \"option_text\": \"Romantic love\"\n          },\n          {\n            \"id\": 2,\n            \"option_text\": \"Selfless love\"\n          },\n          {\n            \"id\": 3,\n            \"option_text\": \"Friendship\"\n          },\n          {\n            \"id\": 4,\n            \"option_text\": \"Family love\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"Exam updated.\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Mid-term Exam (v2)\",\n    \"description\": \"Covers weeks 1-4.\",\n    \"score\": 100,\n    \"minimum_score\": 70,\n    \"duration_minutes\": 30,\n    \"is_random\": false,\n    \"submitters_count\": 5,\n    \"questions_count\": 5,\n    \"created_at\": \"2026-04-01T10:00:00+00:00\",\n    \"session\": {\n      \"id\": 1,\n      \"course_id\": 1,\n      \"title\": \"Week 1 — Overview\",\n      \"description\": \"Opening session.\",\n      \"type\": \"online\",\n      \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n      \"location\": null,\n      \"link\": \"https://meet.example.com/abc\",\n      \"prerequisite_session_ids\": [],\n      \"course\": {\n        \"id\": 1,\n        \"term_id\": 1,\n        \"teacher_id\": 2,\n        \"title\": \"Intro to Theology\",\n        \"description\": \"Foundational course.\",\n        \"capacity\": 50,\n        \"is_active\": true,\n        \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n        \"sessions_count\": 12,\n        \"prerequisite_course_ids\": [],\n        \"term\": {\n          \"id\": 1,\n          \"title\": \"Spring 2026\",\n          \"description\": \"Spring term covering intro & intermediate units.\",\n          \"is_active\": true,\n          \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n          \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n          \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n          \"courses_count\": 4,\n          \"students_count\": 27,\n          \"created_at\": \"2026-02-01T10:00:00+00:00\"\n        }\n      }\n    },\n    \"questions\": [\n      {\n        \"id\": 1,\n        \"question_text\": \"What does the Greek word agape mean?\",\n        \"position\": 1,\n        \"score\": 25,\n        \"options\": [\n          {\n            \"id\": 1,\n            \"option_text\": \"Romantic love\"\n          },\n          {\n            \"id\": 2,\n            \"option_text\": \"Selfless love\"\n          },\n          {\n            \"id\": 3,\n            \"option_text\": \"Friendship\"\n          },\n          {\n            \"id\": 4,\n            \"option_text\": \"Family love\"\n          }\n        ]\n      }\n    ]\n  }\n}"
             }
           ]
         },
@@ -4311,7 +4388,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"question_text\": \"What does the Greek word agape mean?\",\n  \"position\": 1,\n  \"options\": [\n    {\n      \"option_text\": \"Romantic love\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Selfless love\",\n      \"is_correct\": true\n    },\n    {\n      \"option_text\": \"Friendship\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Family love\",\n      \"is_correct\": false\n    }\n  ]\n}"
+              "raw": "{\n  \"question_text\": \"What does the Greek word agape mean?\",\n  \"position\": 1,\n  \"options\": [\n    {\n      \"option_text\": \"Romantic love\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Selfless love\",\n      \"is_correct\": true\n    },\n    {\n      \"option_text\": \"Friendship\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Family love\",\n      \"is_correct\": false\n    }\n  ],\n  \"score\": 25\n}"
             },
             "description": "Creates the question and its options atomically. Must include at least 2 options."
           },
@@ -4343,7 +4420,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"question_text\": \"What does the Greek word agape mean?\",\n  \"position\": 1,\n  \"options\": [\n    {\n      \"option_text\": \"Romantic love\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Selfless love\",\n      \"is_correct\": true\n    },\n    {\n      \"option_text\": \"Friendship\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Family love\",\n      \"is_correct\": false\n    }\n  ]\n}"
+                  "raw": "{\n  \"question_text\": \"What does the Greek word agape mean?\",\n  \"position\": 1,\n  \"options\": [\n    {\n      \"option_text\": \"Romantic love\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Selfless love\",\n      \"is_correct\": true\n    },\n    {\n      \"option_text\": \"Friendship\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Family love\",\n      \"is_correct\": false\n    }\n  ],\n  \"score\": 25\n}"
                 }
               },
               "status": "Created",
@@ -4356,7 +4433,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Question added.\",\n  \"data\": {\n    \"id\": 1,\n    \"question_text\": \"What does the Greek word agape mean?\",\n    \"position\": 1,\n    \"options\": [\n      {\n        \"id\": 1,\n        \"option_text\": \"Romantic love\"\n      },\n      {\n        \"id\": 2,\n        \"option_text\": \"Selfless love\"\n      },\n      {\n        \"id\": 3,\n        \"option_text\": \"Friendship\"\n      },\n      {\n        \"id\": 4,\n        \"option_text\": \"Family love\"\n      }\n    ]\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"Question added.\",\n  \"data\": {\n    \"id\": 1,\n    \"question_text\": \"What does the Greek word agape mean?\",\n    \"position\": 1,\n    \"score\": 25,\n    \"options\": [\n      {\n        \"id\": 1,\n        \"option_text\": \"Romantic love\"\n      },\n      {\n        \"id\": 2,\n        \"option_text\": \"Selfless love\"\n      },\n      {\n        \"id\": 3,\n        \"option_text\": \"Friendship\"\n      },\n      {\n        \"id\": 4,\n        \"option_text\": \"Family love\"\n      }\n    ]\n  }\n}"
             },
             {
               "name": "422 — Validation error",
@@ -4385,7 +4462,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"question_text\": \"What does the Greek word agape mean?\",\n  \"position\": 1,\n  \"options\": [\n    {\n      \"option_text\": \"Romantic love\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Selfless love\",\n      \"is_correct\": true\n    },\n    {\n      \"option_text\": \"Friendship\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Family love\",\n      \"is_correct\": false\n    }\n  ]\n}"
+                  "raw": "{\n  \"question_text\": \"What does the Greek word agape mean?\",\n  \"position\": 1,\n  \"options\": [\n    {\n      \"option_text\": \"Romantic love\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Selfless love\",\n      \"is_correct\": true\n    },\n    {\n      \"option_text\": \"Friendship\",\n      \"is_correct\": false\n    },\n    {\n      \"option_text\": \"Family love\",\n      \"is_correct\": false\n    }\n  ],\n  \"score\": 25\n}"
                 }
               },
               "status": "Unprocessable Entity",
@@ -4478,6 +4555,100 @@
           ]
         },
         {
+          "name": "Start Exam (student/missionary)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/exams/{{exam_id}}/start",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "exams",
+                "{{exam_id}}",
+                "start"
+              ]
+            },
+            "description": "Student/missionary. Begin (or resume) an attempt on this exam. Idempotent — if an un-submitted attempt already exists it is returned unchanged. Returns the attempt with started_at and deadline_at = min(started_at + duration_minutes, term.ends_at). Submit must arrive before deadline_at. 422 if the user already passed this exam or the term is closed."
+          },
+          "response": [
+            {
+              "name": "201 — Started",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/exams/{{exam_id}}/start",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "exams",
+                    "{{exam_id}}",
+                    "start"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Exam started.\",\n  \"data\": {\n    \"id\": 14,\n    \"exam_id\": 1,\n    \"score\": 0,\n    \"is_passed\": false,\n    \"started_at\": \"2026-04-12T15:00:00+03:30\",\n    \"submitted_at\": null,\n    \"deadline_at\": \"2026-04-12T15:30:00+03:30\"\n  }\n}"
+            },
+            {
+              "name": "422 — Term closed / already passed",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/exams/{{exam_id}}/start",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "exams",
+                    "{{exam_id}}",
+                    "start"
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"This term is not currently open.\"\n}"
+            }
+          ]
+        },
+        {
           "name": "Submit Exam (student/missionary)",
           "request": {
             "method": "POST",
@@ -4549,7 +4720,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Exam submitted.\",\n  \"data\": {\n    \"id\": 10,\n    \"exam_id\": 1,\n    \"score\": 80,\n    \"is_passed\": true,\n    \"submitted_at\": \"2026-04-01T10:30:00+00:00\"\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"Exam submitted.\",\n  \"data\": {\n    \"id\": 10,\n    \"exam_id\": 1,\n    \"score\": 80,\n    \"is_passed\": true,\n    \"started_at\": \"2026-04-12T15:00:00+03:30\",\n    \"submitted_at\": \"2026-04-01T10:30:00+00:00\",\n    \"deadline_at\": \"2026-04-12T15:30:00+03:30\"\n  }\n}"
             },
             {
               "name": "422 — Already submitted / scoring error",
@@ -4668,7 +4839,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/admin/homeworks?session_id={{session_id}}&course_id={{course_id}}&per_page=20",
+              "raw": "{{base_url}}/admin/homeworks?term_id={{term_id}}&course_id={{course_id}}&session_id={{session_id}}&per_page=20",
               "host": [
                 "{{base_url}}"
               ],
@@ -4678,9 +4849,9 @@
               ],
               "query": [
                 {
-                  "key": "session_id",
-                  "value": "{{session_id}}",
-                  "description": "Optional. Filter homeworks by session."
+                  "key": "term_id",
+                  "value": "{{term_id}}",
+                  "description": "Optional. Filter homeworks by term (via session → course → term)."
                 },
                 {
                   "key": "course_id",
@@ -4688,12 +4859,17 @@
                   "description": "Optional. Filter homeworks by the course of their session."
                 },
                 {
+                  "key": "session_id",
+                  "value": "{{session_id}}",
+                  "description": "Optional. Filter homeworks by session."
+                },
+                {
                   "key": "per_page",
                   "value": "20"
                 }
               ]
             },
-            "description": "Admin-only. Paginated list of all homeworks. Both filters are optional and can be combined."
+            "description": "Admin-only. Paginated list of all homeworks. All three filters (term_id, course_id, session_id) are optional and can be combined for the cascading term → course → session UI."
           },
           "response": [
             {
@@ -4737,7 +4913,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"session_id\": 1,\n        \"title\": \"Read chapter 3\",\n        \"description\": \"Summarize the main themes.\",\n        \"deadline\": \"2026-04-01T23:59:59+00:00\",\n        \"is_active\": true\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"session_id\": 1,\n        \"title\": \"Read chapter 3\",\n        \"description\": \"Summarize the main themes.\",\n        \"deadline\": \"2026-04-01T23:59:59+00:00\",\n        \"effective_deadline\": \"2026-04-01T23:59:59+00:00\",\n        \"is_active\": true,\n        \"is_priority\": false,\n        \"submitters_count\": 8,\n        \"created_at\": \"2026-04-01T10:00:00+00:00\",\n        \"media\": [],\n        \"session\": {\n          \"id\": 1,\n          \"course_id\": 1,\n          \"title\": \"Week 1 — Overview\",\n          \"description\": \"Opening session.\",\n          \"type\": \"online\",\n          \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n          \"location\": null,\n          \"link\": \"https://meet.example.com/abc\",\n          \"prerequisite_session_ids\": [],\n          \"course\": {\n            \"id\": 1,\n            \"term_id\": 1,\n            \"teacher_id\": 2,\n            \"title\": \"Intro to Theology\",\n            \"description\": \"Foundational course.\",\n            \"capacity\": 50,\n            \"is_active\": true,\n            \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n            \"sessions_count\": 12,\n            \"prerequisite_course_ids\": [],\n            \"term\": {\n              \"id\": 1,\n              \"title\": \"Spring 2026\",\n              \"description\": \"Spring term covering intro & intermediate units.\",\n              \"is_active\": true,\n              \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n              \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n              \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n              \"courses_count\": 4,\n              \"students_count\": 27,\n              \"created_at\": \"2026-02-01T10:00:00+00:00\"\n            }\n          }\n        }\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
             },
             {
               "name": "403 — Forbidden",
@@ -4842,7 +5018,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"session_id\": 1,\n        \"title\": \"Read chapter 3\",\n        \"description\": \"Summarize the main themes.\",\n        \"deadline\": \"2026-04-01T23:59:59+00:00\",\n        \"is_active\": true\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"session_id\": 1,\n        \"title\": \"Read chapter 3\",\n        \"description\": \"Summarize the main themes.\",\n        \"deadline\": \"2026-04-01T23:59:59+00:00\",\n        \"effective_deadline\": \"2026-04-01T23:59:59+00:00\",\n        \"is_active\": true,\n        \"is_priority\": false,\n        \"submitters_count\": 8,\n        \"created_at\": \"2026-04-01T10:00:00+00:00\",\n        \"media\": [],\n        \"session\": {\n          \"id\": 1,\n          \"course_id\": 1,\n          \"title\": \"Week 1 — Overview\",\n          \"description\": \"Opening session.\",\n          \"type\": \"online\",\n          \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n          \"location\": null,\n          \"link\": \"https://meet.example.com/abc\",\n          \"prerequisite_session_ids\": [],\n          \"course\": {\n            \"id\": 1,\n            \"term_id\": 1,\n            \"teacher_id\": 2,\n            \"title\": \"Intro to Theology\",\n            \"description\": \"Foundational course.\",\n            \"capacity\": 50,\n            \"is_active\": true,\n            \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n            \"sessions_count\": 12,\n            \"prerequisite_course_ids\": [],\n            \"term\": {\n              \"id\": 1,\n              \"title\": \"Spring 2026\",\n              \"description\": \"Spring term covering intro & intermediate units.\",\n              \"is_active\": true,\n              \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n              \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n              \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n              \"courses_count\": 4,\n              \"students_count\": 27,\n              \"created_at\": \"2026-02-01T10:00:00+00:00\"\n            }\n          }\n        }\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
             },
             {
               "name": "403 — Prerequisites not met",
@@ -4881,6 +5057,169 @@
           ]
         },
         {
+          "name": "Show Homework",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/homeworks/{{homework_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "homeworks",
+                "{{homework_id}}"
+              ]
+            },
+            "description": "Authenticated. Returns a single homework with attached media and the parent session+course embedded. is_priority=true means the homework is required for passing the term."
+          },
+          "response": [
+            {
+              "name": "200 — OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/homeworks/{{homework_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "homeworks",
+                    "{{homework_id}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Reflection paper\",\n    \"description\": \"Write 500 words on the lecture.\",\n    \"deadline\": \"2026-04-15T23:59:00+03:30\",\n    \"effective_deadline\": \"2026-04-15T23:59:00+03:30\",\n    \"is_active\": true,\n    \"is_priority\": true,\n    \"submitters_count\": 8,\n    \"created_at\": \"2026-04-01T10:00:00+00:00\",\n    \"media\": [\n      {\n        \"id\": 15,\n        \"collection_name\": \"attachments\",\n        \"file_name\": \"prompt.pdf\",\n        \"mime_type\": \"application/pdf\",\n        \"file_size\": 102400,\n        \"url\": \"http://localhost:8080/storage/homeworks/1/prompt.pdf\",\n        \"download_url\": \"http://localhost:8080/api/media/15/download\"\n      }\n    ],\n    \"session\": {\n      \"id\": 1,\n      \"course_id\": 1,\n      \"title\": \"Week 1 — Overview\",\n      \"description\": \"Opening session.\",\n      \"type\": \"online\",\n      \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n      \"location\": null,\n      \"link\": \"https://meet.example.com/abc\",\n      \"prerequisite_session_ids\": [],\n      \"course\": {\n        \"id\": 1,\n        \"term_id\": 1,\n        \"teacher_id\": 2,\n        \"title\": \"Intro to Theology\",\n        \"description\": \"Foundational course.\",\n        \"capacity\": 50,\n        \"is_active\": true,\n        \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n        \"sessions_count\": 12,\n        \"prerequisite_course_ids\": [],\n        \"term\": {\n          \"id\": 1,\n          \"title\": \"Spring 2026\",\n          \"description\": \"Spring term covering intro & intermediate units.\",\n          \"is_active\": true,\n          \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n          \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n          \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n          \"courses_count\": 4,\n          \"students_count\": 27,\n          \"created_at\": \"2026-02-01T10:00:00+00:00\"\n        }\n      }\n    }\n  }\n}"
+            },
+            {
+              "name": "404 — Not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/homeworks/{{homework_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "homeworks",
+                    "{{homework_id}}"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Resource not found.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Homework Submissions (admin/teacher)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/homeworks/{{homework_id}}/submissions?per_page=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "homeworks",
+                "{{homework_id}}",
+                "submissions"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Admin/teacher only. Paginated list of all student submissions for this homework, with the submitting user (and their uploaded media) embedded. One row per (homework, user) by schema constraint."
+          },
+          "response": [
+            {
+              "name": "200 — Paginated",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/homeworks/{{homework_id}}/submissions?per_page=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "homeworks",
+                    "{{homework_id}}",
+                    "submissions"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 22,\n        \"homework_id\": 1,\n        \"user_id\": 5,\n        \"status\": \"pending\",\n        \"teacher_feedback\": null,\n        \"reviewed_at\": null,\n        \"media\": [\n          {\n            \"id\": 33,\n            \"collection_name\": \"homework\",\n            \"file_name\": \"reflection.pdf\",\n            \"mime_type\": \"application/pdf\",\n            \"file_size\": 81920,\n            \"url\": null,\n            \"download_url\": \"http://localhost:8080/api/media/33/download\"\n          }\n        ],\n        \"user\": {\n          \"id\": 5,\n          \"name\": \"Jane Student\",\n          \"email\": \"jane.student@example.com\",\n          \"phone\": \"+989121234567\",\n          \"province_id\": 8,\n          \"city_id\": 47,\n          \"province\": {\n            \"id\": 8,\n            \"name\": \"تهران\"\n          },\n          \"city\": {\n            \"id\": 47,\n            \"province_id\": 8,\n            \"name\": \"تهران\"\n          },\n          \"roles\": [\n            \"student\"\n          ],\n          \"avatar_url\": null,\n          \"avatar_download_url\": null,\n          \"created_at\": \"2026-02-01T10:00:00+00:00\"\n        }\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
           "name": "Create Homework (admin/teacher)",
           "request": {
             "method": "POST",
@@ -4905,7 +5244,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"session_id\": 1,\n  \"title\": \"Reflection paper\",\n  \"description\": \"Write 500 words on the lecture.\",\n  \"deadline\": \"2026-04-15T23:59:00+03:30\",\n  \"is_active\": true\n}"
+              "raw": "{\n  \"session_id\": 1,\n  \"title\": \"Reflection paper\",\n  \"description\": \"Write 500 words on the lecture.\",\n  \"deadline\": \"2026-04-15T23:59:00+03:30\",\n  \"is_active\": true,\n  \"is_priority\": true,\n  \"media_ids\": [\n    15,\n    16\n  ]\n}"
             }
           },
           "response": [
@@ -4934,7 +5273,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"session_id\": 1,\n  \"title\": \"Reflection paper\",\n  \"description\": \"Write 500 words on the lecture.\",\n  \"deadline\": \"2026-04-15T23:59:00+03:30\",\n  \"is_active\": true\n}"
+                  "raw": "{\n  \"session_id\": 1,\n  \"title\": \"Reflection paper\",\n  \"description\": \"Write 500 words on the lecture.\",\n  \"deadline\": \"2026-04-15T23:59:00+03:30\",\n  \"is_active\": true,\n  \"is_priority\": true,\n  \"media_ids\": [\n    15,\n    16\n  ]\n}"
                 }
               },
               "status": "Created",
@@ -4947,7 +5286,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Homework created.\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Reflection paper\",\n    \"description\": \"Write 500 words on the lecture.\",\n    \"deadline\": \"2026-04-15T23:59:00+03:30\",\n    \"is_active\": true\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"Homework created.\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Reflection paper\",\n    \"description\": \"Write 500 words on the lecture.\",\n    \"deadline\": \"2026-04-15T23:59:00+03:30\",\n    \"effective_deadline\": \"2026-04-15T23:59:00+03:30\",\n    \"is_active\": true,\n    \"is_priority\": false,\n    \"submitters_count\": 8,\n    \"created_at\": \"2026-04-01T10:00:00+00:00\",\n    \"media\": [],\n    \"session\": {\n      \"id\": 1,\n      \"course_id\": 1,\n      \"title\": \"Week 1 — Overview\",\n      \"description\": \"Opening session.\",\n      \"type\": \"online\",\n      \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n      \"location\": null,\n      \"link\": \"https://meet.example.com/abc\",\n      \"prerequisite_session_ids\": [],\n      \"course\": {\n        \"id\": 1,\n        \"term_id\": 1,\n        \"teacher_id\": 2,\n        \"title\": \"Intro to Theology\",\n        \"description\": \"Foundational course.\",\n        \"capacity\": 50,\n        \"is_active\": true,\n        \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n        \"sessions_count\": 12,\n        \"prerequisite_course_ids\": [],\n        \"term\": {\n          \"id\": 1,\n          \"title\": \"Spring 2026\",\n          \"description\": \"Spring term covering intro & intermediate units.\",\n          \"is_active\": true,\n          \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n          \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n          \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n          \"courses_count\": 4,\n          \"students_count\": 27,\n          \"created_at\": \"2026-02-01T10:00:00+00:00\"\n        }\n      }\n    }\n  }\n}"
             }
           ]
         },
@@ -4977,7 +5316,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Reflection paper (extended)\",\n  \"deadline\": \"2026-04-22T23:59:00+03:30\"\n}"
+              "raw": "{\n  \"title\": \"Reflection paper (extended)\",\n  \"deadline\": \"2026-04-22T23:59:00+03:30\",\n  \"is_priority\": true,\n  \"media_ids\": [\n    15,\n    16\n  ]\n}"
             }
           },
           "response": [
@@ -5007,7 +5346,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"title\": \"Reflection paper (extended)\",\n  \"deadline\": \"2026-04-22T23:59:00+03:30\"\n}"
+                  "raw": "{\n  \"title\": \"Reflection paper (extended)\",\n  \"deadline\": \"2026-04-22T23:59:00+03:30\",\n  \"is_priority\": true,\n  \"media_ids\": [\n    15,\n    16\n  ]\n}"
                 }
               },
               "status": "OK",
@@ -5020,7 +5359,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Homework updated.\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Reflection paper (extended)\",\n    \"description\": \"Write 500 words on the lecture.\",\n    \"deadline\": \"2026-04-22T23:59:00+03:30\",\n    \"is_active\": true\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"Homework updated.\",\n  \"data\": {\n    \"id\": 1,\n    \"session_id\": 1,\n    \"title\": \"Reflection paper (extended)\",\n    \"description\": \"Write 500 words on the lecture.\",\n    \"deadline\": \"2026-04-22T23:59:00+03:30\",\n    \"effective_deadline\": \"2026-04-22T23:59:00+03:30\",\n    \"is_active\": true,\n    \"is_priority\": false,\n    \"submitters_count\": 8,\n    \"created_at\": \"2026-04-01T10:00:00+00:00\",\n    \"media\": [],\n    \"session\": {\n      \"id\": 1,\n      \"course_id\": 1,\n      \"title\": \"Week 1 — Overview\",\n      \"description\": \"Opening session.\",\n      \"type\": \"online\",\n      \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n      \"location\": null,\n      \"link\": \"https://meet.example.com/abc\",\n      \"prerequisite_session_ids\": [],\n      \"course\": {\n        \"id\": 1,\n        \"term_id\": 1,\n        \"teacher_id\": 2,\n        \"title\": \"Intro to Theology\",\n        \"description\": \"Foundational course.\",\n        \"capacity\": 50,\n        \"is_active\": true,\n        \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n        \"sessions_count\": 12,\n        \"prerequisite_course_ids\": [],\n        \"term\": {\n          \"id\": 1,\n          \"title\": \"Spring 2026\",\n          \"description\": \"Spring term covering intro & intermediate units.\",\n          \"is_active\": true,\n          \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n          \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n          \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n          \"courses_count\": 4,\n          \"students_count\": 27,\n          \"created_at\": \"2026-02-01T10:00:00+00:00\"\n        }\n      }\n    }\n  }\n}"
             }
           ]
         },
@@ -5867,7 +6206,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 10,\n        \"exam_id\": 1,\n        \"score\": 80,\n        \"is_passed\": true,\n        \"submitted_at\": \"2026-04-01T10:30:00+00:00\"\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 10,\n        \"exam_id\": 1,\n        \"score\": 80,\n        \"is_passed\": true,\n        \"started_at\": \"2026-04-12T15:00:00+03:30\",\n        \"submitted_at\": \"2026-04-01T10:30:00+00:00\",\n        \"deadline_at\": \"2026-04-12T15:30:00+03:30\"\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
             }
           ]
         },
@@ -5925,7 +6264,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"session_id\": 1,\n        \"title\": \"Reflection paper\",\n        \"description\": \"Write 500 words on the lecture.\",\n        \"deadline\": \"2026-04-15T23:59:00+03:30\",\n        \"is_active\": true\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
+              "body": "{\n  \"success\": true,\n  \"message\": \"OK\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": 1,\n        \"session_id\": 1,\n        \"title\": \"Reflection paper\",\n        \"description\": \"Write 500 words on the lecture.\",\n        \"deadline\": \"2026-04-15T23:59:00+03:30\",\n        \"effective_deadline\": \"2026-04-15T23:59:00+03:30\",\n        \"is_active\": true,\n        \"is_priority\": false,\n        \"submitters_count\": 8,\n        \"created_at\": \"2026-04-01T10:00:00+00:00\",\n        \"media\": [],\n        \"session\": {\n          \"id\": 1,\n          \"course_id\": 1,\n          \"title\": \"Week 1 — Overview\",\n          \"description\": \"Opening session.\",\n          \"type\": \"online\",\n          \"starts_at\": \"2026-03-25T18:00:00+03:30\",\n          \"location\": null,\n          \"link\": \"https://meet.example.com/abc\",\n          \"prerequisite_session_ids\": [],\n          \"course\": {\n            \"id\": 1,\n            \"term_id\": 1,\n            \"teacher_id\": 2,\n            \"title\": \"Intro to Theology\",\n            \"description\": \"Foundational course.\",\n            \"capacity\": 50,\n            \"is_active\": true,\n            \"cover_url\": \"http://localhost:8080/storage/courses/1/cover.jpg\",\n            \"sessions_count\": 12,\n            \"prerequisite_course_ids\": [],\n            \"term\": {\n              \"id\": 1,\n              \"title\": \"Spring 2026\",\n              \"description\": \"Spring term covering intro & intermediate units.\",\n              \"is_active\": true,\n              \"starts_at\": \"2026-03-20T00:00:00+00:00\",\n              \"ends_at\": \"2026-06-20T00:00:00+00:00\",\n              \"cover_url\": \"http://localhost:8080/storage/terms/1/cover.jpg\",\n              \"courses_count\": 4,\n              \"students_count\": 27,\n              \"created_at\": \"2026-02-01T10:00:00+00:00\"\n            }\n          }\n        }\n      }\n    ],\n    \"meta\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"last_page\": 1\n    }\n  }\n}"
             }
           ]
         },

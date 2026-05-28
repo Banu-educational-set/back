@@ -16,8 +16,8 @@ class EnrollmentService
 
     public function enroll(User $user, Term $term): TermEnrollment
     {
-        if (! $term->is_active) {
-            throw new RuntimeException('Term is not active.');
+        if (! $term->isOpenNow()) {
+            throw new RuntimeException('Term is not currently open for enrollment.');
         }
 
         $enrollment = DB::transaction(function () use ($user, $term) {

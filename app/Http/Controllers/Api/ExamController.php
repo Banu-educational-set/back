@@ -50,6 +50,9 @@ class ExamController extends Controller
         }
 
         $exams = Exam::query()
+            ->with('session.course.term')
+            ->withCount('questions')
+            ->withCount(['attempts as submitters_count' => fn ($q) => $q->select(\Illuminate\Support\Facades\DB::raw('count(distinct user_id)'))])
             ->where('session_id', $session->id)
             ->when($isStudent, fn ($q) => $q->where('is_active', true))
             ->orderByDesc('id')
@@ -63,6 +66,7 @@ class ExamController extends Controller
         $exams = $this->managementService->paginate(
             sessionId: $request->filled('session_id') ? (int) $request->input('session_id') : null,
             courseId: $request->filled('course_id') ? (int) $request->input('course_id') : null,
+            termId: $request->filled('term_id') ? (int) $request->input('term_id') : null,
             perPage: (int) $request->integer('per_page', 20),
         );
 
@@ -73,7 +77,42 @@ class ExamController extends Controller
     {
         $this->authorize('view', $exam);
 
-        return ApiResponse::success(new ExamResource($exam->load('questions.options')));
+        $exam->load(['questions.options', 'session.course.term'])->loadCount([
+            'questions',
+            'attempts as submitters_count' => fn ($q) => $q->select(\Illuminate\Support\Facades\DB::raw('count(distinct user_id)')),
+        ]);
+
+        $user = $request->user();
+        $isStudent = $user && $user->hasRole(RoleName::Student->value)
+            && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value]);
+        if ($isStudent && $exam->is_random) {
+            $exam->setRelation('questions', $exam->questions->shuffle()->values());
+        }
+
+        return ApiResponse::success(new ExamResource($exam));
+    }
+
+    public function attempts(Request $request, Exam $exam): JsonResponse
+    {
+        $attempts = $exam->attempts()
+            ->with(['user.roles', 'user.avatar'])
+            ->orderByDesc('id')
+            ->paginate((int) $request->integer('per_page', 20));
+
+        return ApiResponse::success(ExamAttemptResource::collection($attempts));
+    }
+
+    public function start(Request $request, Exam $exam): JsonResponse
+    {
+        $this->authorize('submit', $exam);
+
+        try {
+            $attempt = $this->scoringService->start($request->user(), $exam);
+        } catch (RuntimeException $e) {
+            return ApiResponse::error($e->getMessage(), null, 422);
+        }
+
+        return ApiResponse::success(new ExamAttemptResource($attempt), 'Exam started.', 201);
     }
 
     public function submit(SubmitExamRequest $request, Exam $exam): JsonResponse

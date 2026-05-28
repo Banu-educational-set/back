@@ -16,6 +16,7 @@ class StoreQuestionRequest extends FormRequest
         return [
             'question_text' => ['required', 'string', 'max:2000'],
             'position' => ['nullable', 'integer', 'min:0'],
+            'score' => ['required', 'integer', 'min:1'],
             'options' => ['required', 'array', 'min:2'],
             'options.*.option_text' => ['required', 'string', 'max:1000'],
             'options.*.is_correct' => ['boolean'],

@@ -11,10 +11,11 @@ class ExamAttempt extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'exam_id', 'score', 'is_passed', 'submitted_at'];
+    protected $fillable = ['user_id', 'exam_id', 'score', 'is_passed', 'started_at', 'submitted_at'];
 
     protected $casts = [
         'is_passed' => 'boolean',
+        'started_at' => 'datetime',
         'submitted_at' => 'datetime',
         'score' => 'integer',
     ];
@@ -32,5 +33,22 @@ class ExamAttempt extends Model
     public function answers(): HasMany
     {
         return $this->hasMany(ExamAnswer::class, 'attempt_id');
+    }
+
+    /**
+     * The hard cutoff for this attempt: min(started_at + duration, term.ends_at).
+     * Null if neither constraint applies (no duration, no term end).
+     */
+    public function getDeadlineAtAttribute(): ?\Carbon\Carbon
+    {
+        $byDuration = null;
+        $duration = $this->exam?->duration_minutes;
+        if ($this->started_at && $duration) {
+            $byDuration = $this->started_at->copy()->addMinutes((int) $duration);
+        }
+
+        $byTerm = $this->exam?->session?->course?->term?->ends_at;
+
+        return collect([$byDuration, $byTerm])->filter()->min();
     }
 }

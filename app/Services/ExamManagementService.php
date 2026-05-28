@@ -11,12 +11,15 @@ use RuntimeException;
 
 class ExamManagementService
 {
-    public function paginate(?int $sessionId, ?int $courseId, int $perPage = 20): LengthAwarePaginator
+    public function paginate(?int $sessionId, ?int $courseId, ?int $termId, int $perPage = 20): LengthAwarePaginator
     {
         return Exam::query()
-            ->with('session.course')
+            ->with('session.course.term')
+            ->withCount('questions')
+            ->withCount(['attempts as submitters_count' => fn ($q) => $q->select(DB::raw('count(distinct user_id)'))])
             ->when($sessionId, fn ($q, $id) => $q->where('session_id', $id))
             ->when($courseId, fn ($q, $id) => $q->whereHas('session', fn ($s) => $s->where('course_id', $id)))
+            ->when($termId, fn ($q, $id) => $q->whereHas('session.course', fn ($c) => $c->where('term_id', $id)))
             ->orderByDesc('id')
             ->paginate($perPage);
     }
@@ -56,6 +59,7 @@ class ExamManagementService
             $question = $exam->questions()->create([
                 'question_text' => $data['question_text'],
                 'position' => $position,
+                'score' => (int) $data['score'],
             ]);
 
             foreach ($options as $option) {

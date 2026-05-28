@@ -14,7 +14,10 @@ class ExamAttemptResource extends JsonResource
             'exam_id' => $this->exam_id,
             'score' => $this->score,
             'is_passed' => $this->is_passed,
+            'started_at' => $this->started_at?->toIso8601String(),
             'submitted_at' => $this->submitted_at?->toIso8601String(),
+            'deadline_at' => $this->deadline_at?->toIso8601String(),
+            'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }

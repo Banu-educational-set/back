@@ -21,6 +21,11 @@ class HomeworkSubmissionService
      */
     public function submit(User $user, Homework $homework, int $mediaId): HomeworkSubmission
     {
+        $deadline = $homework->effectiveDeadline();
+        if ($deadline && now()->gt($deadline)) {
+            throw new \RuntimeException('The deadline for this homework has passed.');
+        }
+
         return DB::transaction(function () use ($user, $homework, $mediaId) {
             $existing = HomeworkSubmission::query()
                 ->where('homework_id', $homework->id)

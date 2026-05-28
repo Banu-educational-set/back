@@ -35,7 +35,15 @@ class CourseSessionController extends Controller
     public function show(Request $request, CourseSession $session): JsonResponse
     {
         $user = $request->user();
-        if ($user && $user->hasRole(RoleName::Student->value) && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value])) {
+        $isStudent = $user && $user->hasRole(RoleName::Student->value)
+            && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value]);
+
+        if ($isStudent) {
+            $term = $session->course?->term;
+            if ($session->course?->term_id && ! $term?->isOpenNow()) {
+                return ApiResponse::error('This term is not currently open.', null, 403);
+            }
+
             $unmet = $this->prerequisiteService->sessionUnmetPrerequisites($user, $session);
             if ($unmet !== []) {
                 return ApiResponse::error(
@@ -46,7 +54,7 @@ class CourseSessionController extends Controller
             }
         }
 
-        $session->load(['course', 'media']);
+        $session->load(['course.term', 'media']);
         $this->sessionService->attachPrerequisiteSessions(collect([$session]));
 
         return ApiResponse::success(new CourseSessionResource($session));

@@ -13,6 +13,7 @@ class ExamQuestionResource extends JsonResource
             'id' => $this->id,
             'question_text' => $this->question_text,
             'position' => $this->position,
+            'score' => (int) $this->score,
             'options' => ExamOptionResource::collection($this->whenLoaded('options')),
         ];
     }

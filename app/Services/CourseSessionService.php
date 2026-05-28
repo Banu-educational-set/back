@@ -17,11 +17,14 @@ class CourseSessionService
     public function paginate(?User $viewer, ?int $courseId, int $perPage = 20): LengthAwarePaginator
     {
         $paginator = CourseSession::query()
-            ->with('course')
+            ->with('course.term')
             ->when($courseId, fn ($q, $id) => $q->where('course_id', $id))
             ->when(
                 $this->mustFilterInactive($viewer),
-                fn ($q) => $q->whereHas('course', fn ($c) => $c->where('is_active', true))
+                fn ($q) => $q->whereHas('course', fn ($c) => $c
+                    ->where('is_active', true)
+                    ->where(fn ($c) => $c->whereNull('term_id')
+                        ->orWhereHas('term', fn ($t) => $t->openNow())))
             )
             ->orderByDesc('id')
             ->paginate($perPage);

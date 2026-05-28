@@ -19,6 +19,9 @@ class UpdateHomeworkRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'deadline' => ['nullable', 'date'],
             'is_active' => ['boolean'],
+            'is_priority' => ['boolean'],
+            'media_ids' => ['nullable', 'array'],
+            'media_ids.*' => ['integer', 'exists:media,id'],
         ];
     }
 }

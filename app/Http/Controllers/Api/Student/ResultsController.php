@@ -32,6 +32,8 @@ class ResultsController extends Controller
             ->pluck('term_id');
 
         $homeworks = Homework::query()
+            ->with(['session.course.term', 'media'])
+            ->withCount(['submissions as submitters_count'])
             ->where('is_active', true)
             ->whereHas('session.course', function ($q) use ($termIds) {
                 $q->whereIn('term_id', $termIds)

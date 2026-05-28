@@ -36,10 +36,28 @@ class HomeworkController extends Controller
         $homeworks = $this->homeworkService->paginate(
             sessionId: $request->filled('session_id') ? (int) $request->input('session_id') : null,
             courseId: $request->filled('course_id') ? (int) $request->input('course_id') : null,
+            termId: $request->filled('term_id') ? (int) $request->input('term_id') : null,
             perPage: (int) $request->integer('per_page', 20),
         );
 
         return ApiResponse::success(HomeworkResource::collection($homeworks));
+    }
+
+    public function show(Homework $homework): JsonResponse
+    {
+        $homework->load(['session.course.term', 'media'])->loadCount(['submissions as submitters_count']);
+
+        return ApiResponse::success(new HomeworkResource($homework));
+    }
+
+    public function submissions(Request $request, Homework $homework): JsonResponse
+    {
+        $submissions = $homework->submissions()
+            ->with(['user.roles', 'user.avatar', 'media'])
+            ->orderByDesc('id')
+            ->paginate((int) $request->integer('per_page', 20));
+
+        return ApiResponse::success(HomeworkSubmissionResource::collection($submissions));
     }
 
     public function forSession(Request $request, CourseSession $session): JsonResponse
@@ -60,6 +78,8 @@ class HomeworkController extends Controller
         }
 
         $homeworks = Homework::query()
+            ->with(['session.course.term', 'media'])
+            ->withCount(['submissions as submitters_count'])
             ->where('session_id', $session->id)
             ->when($isStudent, fn ($q) => $q->where('is_active', true))
             ->orderByDesc('id')
@@ -70,14 +90,14 @@ class HomeworkController extends Controller
 
     public function store(StoreHomeworkRequest $request): JsonResponse
     {
-        $homework = $this->homeworkService->create($request->validated());
+        $homework = $this->homeworkService->create($request->validated(), $request->user());
 
         return ApiResponse::success(new HomeworkResource($homework), 'Homework created.', 201);
     }
 
     public function update(UpdateHomeworkRequest $request, Homework $homework): JsonResponse
     {
-        $updated = $this->homeworkService->update($homework, $request->validated());
+        $updated = $this->homeworkService->update($homework, $request->validated(), $request->user());
 
         return ApiResponse::success(new HomeworkResource($updated), 'Homework updated.');
     }

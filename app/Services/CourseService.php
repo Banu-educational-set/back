@@ -23,7 +23,10 @@ class CourseService
             ->when($orphansOnly, fn ($q) => $q->whereNull('term_id'))
             ->when(
                 $this->mustFilterInactive($viewer),
-                fn ($q) => $q->where('is_active', true)
+                fn ($q) => $q
+                    ->where('is_active', true)
+                    ->where(fn ($q) => $q->whereNull('term_id')
+                        ->orWhereHas('term', fn ($t) => $t->openNow()))
             )
             ->orderByDesc('id')
             ->paginate($perPage);

@@ -2,7 +2,6 @@
 
 return [
     'terms_required_for_missionary' => (int) env('TERMS_REQUIRED_FOR_MISSIONARY', 3),
-    'default_exam_pass_score' => (int) env('DEFAULT_EXAM_PASS_SCORE', 70),
 
     'external_api_key' => env('WORDPRESS_MISSIONARY_API_KEY', env('EXTERNAL_API_KEY')),
 

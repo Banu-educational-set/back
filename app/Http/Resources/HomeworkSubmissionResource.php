@@ -17,6 +17,7 @@ class HomeworkSubmissionResource extends JsonResource
             'teacher_feedback' => $this->teacher_feedback,
             'reviewed_at' => $this->reviewed_at?->toIso8601String(),
             'media' => MediaResource::collection($this->whenLoaded('media')),
+            'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }

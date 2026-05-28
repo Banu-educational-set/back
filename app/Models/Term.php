@@ -36,4 +36,33 @@ class Term extends Model
             ->where('collection_name', 'cover')
             ->latestOfMany();
     }
+
+    public function scopeOpenNow($query)
+    {
+        $now = now();
+
+        return $query->where('is_active', true)
+            ->where(fn ($q) => $q->whereNull('starts_at')->orWhere('starts_at', '<=', $now))
+            ->where(fn ($q) => $q->whereNull('ends_at')->orWhere('ends_at', '>=', $now));
+    }
+
+    /**
+     * True when the term's is_active flag is set AND now() falls within
+     * [starts_at, ends_at]. Null bounds are treated as open-ended.
+     */
+    public function isOpenNow(): bool
+    {
+        if (! $this->is_active) {
+            return false;
+        }
+        $now = now();
+        if ($this->starts_at && $now->lt($this->starts_at)) {
+            return false;
+        }
+        if ($this->ends_at && $now->gt($this->ends_at)) {
+            return false;
+        }
+
+        return true;
+    }
 }
