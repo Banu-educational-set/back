@@ -12,12 +12,14 @@ class Term extends Model
 {
     use HasFactory, HasMedia;
 
-    protected $fillable = ['title', 'description', 'is_active', 'starts_at', 'ends_at'];
+    protected $fillable = ['title', 'description', 'is_active', 'starts_at', 'ends_at', 'score', 'minimum_score'];
 
     protected $casts = [
         'is_active' => 'boolean',
         'starts_at' => 'datetime',
         'ends_at' => 'datetime',
+        'score' => 'integer',
+        'minimum_score' => 'integer',
     ];
 
     public function courses(): HasMany

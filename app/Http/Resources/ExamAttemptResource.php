@@ -14,6 +14,8 @@ class ExamAttemptResource extends JsonResource
             'exam_id' => $this->exam_id,
             'score' => $this->score,
             'is_passed' => $this->is_passed,
+            'correct_count' => $this->when(isset($this->correct_count), (int) $this->correct_count),
+            'total_questions' => $this->when(isset($this->total_questions), (int) $this->total_questions),
             'started_at' => $this->started_at?->toIso8601String(),
             'submitted_at' => $this->submitted_at?->toIso8601String(),
             'deadline_at' => $this->deadline_at?->toIso8601String(),

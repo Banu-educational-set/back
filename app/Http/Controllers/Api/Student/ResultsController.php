@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Student;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ExamAttemptResource;
 use App\Http\Resources\HomeworkResource;
-use App\Models\ExamAttempt;
 use App\Models\Homework;
 use App\Models\TermEnrollment;
 use App\Support\ApiResponse;

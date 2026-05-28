@@ -170,11 +170,12 @@ class ExamScoringService
             return $activeAttempt->fresh('answers');
         });
 
-        if ($isPassed) {
-            $term = $exam->session?->course?->term;
-            if ($term) {
-                $this->completionService->evaluate($user, $term);
-            }
+        // Re-evaluate term completion on every submission — failing this exam
+        // can still raise the student's term grade thanks to the new
+        // point-sum model.
+        $term = $exam->session?->course?->term;
+        if ($term) {
+            $this->completionService->evaluate($user, $term);
         }
 
         return $attempt;

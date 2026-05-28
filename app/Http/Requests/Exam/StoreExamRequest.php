@@ -19,8 +19,8 @@ class StoreExamRequest extends FormRequest
             'session_id' => ['required', 'integer', 'exists:course_sessions,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'score' => ['required', 'integer', 'min:1'],
-            'minimum_score' => ['required', 'integer', 'min:0'],
+            'score' => ['sometimes', 'integer', 'min:1'],
+            'minimum_score' => ['sometimes', 'integer', 'min:0'],
             'duration_minutes' => ['nullable', 'integer', 'min:1'],
             'is_active' => ['boolean'],
             'is_random' => ['boolean'],
@@ -30,8 +30,9 @@ class StoreExamRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $v) {
-            $score = $this->integer('score');
-            $min = $this->integer('minimum_score');
+            // Defaults match the DB column defaults (Persian academic norm: 20/12).
+            $score = $this->has('score') ? $this->integer('score') : 20;
+            $min = $this->has('minimum_score') ? $this->integer('minimum_score') : 12;
             if ($score > 0 && $min > $score) {
                 $v->errors()->add('minimum_score', 'minimum_score cannot exceed score.');
             }

@@ -16,6 +16,8 @@ class TermResource extends JsonResource
             'is_active' => $this->is_active,
             'starts_at' => $this->starts_at?->toIso8601String(),
             'ends_at' => $this->ends_at?->toIso8601String(),
+            'score' => (int) $this->score,
+            'minimum_score' => (int) $this->minimum_score,
             'cover_url' => $this->cover?->url(),
             'courses_count' => $this->when(isset($this->courses_count), (int) $this->courses_count),
             'students_count' => $this->when(isset($this->enrollments_count), (int) $this->enrollments_count),

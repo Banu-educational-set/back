@@ -120,6 +120,7 @@ Route::middleware([
 
     Route::get('homeworks/{homework}/submissions', [HomeworkController::class, 'submissions']);
     Route::get('exams/{exam}/attempts', [ExamController::class, 'attempts']);
+    Route::get('exam-attempts/{attempt}', [ExamController::class, 'showAttempt']);
 });
 
 /*

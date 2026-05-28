@@ -9,12 +9,14 @@ use App\Http\Requests\Exam\StoreOptionRequest;
 use App\Http\Requests\Exam\StoreQuestionRequest;
 use App\Http\Requests\Exam\SubmitExamRequest;
 use App\Http\Requests\Exam\UpdateExamRequest;
+use App\Http\Resources\ExamAttemptDetailResource;
 use App\Http\Resources\ExamAttemptResource;
 use App\Http\Resources\ExamOptionResource;
 use App\Http\Resources\ExamQuestionResource;
 use App\Http\Resources\ExamResource;
 use App\Models\CourseSession;
 use App\Models\Exam;
+use App\Models\ExamAttempt;
 use App\Models\ExamQuestion;
 use App\Services\ExamManagementService;
 use App\Services\ExamScoringService;
@@ -94,12 +96,32 @@ class ExamController extends Controller
 
     public function attempts(Request $request, Exam $exam): JsonResponse
     {
+        $totalQuestions = (int) $exam->questions()->count();
+
         $attempts = $exam->attempts()
             ->with(['user.roles', 'user.avatar'])
+            ->withCount(['answers as correct_count' => fn ($q) => $q->where('is_correct', true)])
             ->orderByDesc('id')
             ->paginate((int) $request->integer('per_page', 20));
 
+        $attempts->getCollection()->each(function ($attempt) use ($totalQuestions) {
+            $attempt->setAttribute('total_questions', $totalQuestions);
+        });
+
         return ApiResponse::success(ExamAttemptResource::collection($attempts));
+    }
+
+    public function showAttempt(Request $request, ExamAttempt $attempt): JsonResponse
+    {
+        $attempt->load([
+            'answers',
+            'user.roles',
+            'user.avatar',
+            'exam.session.course.term',
+            'exam.questions.options',
+        ]);
+
+        return ApiResponse::success(new ExamAttemptDetailResource($attempt));
     }
 
     public function start(Request $request, Exam $exam): JsonResponse
