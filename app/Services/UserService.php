@@ -27,7 +27,10 @@ class UserService
 
     public function create(array $data): User
     {
-        $user = User::create(Arr::only($data, ['name', 'email', 'phone', 'password', 'province_id', 'city_id']));
+        $user = User::create(Arr::only($data, [
+            'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
+            'marriage_status', 'birthday', 'gender', 'address',
+        ]));
 
         if (! empty($data['roles'])) {
             $user->syncRoles($data['roles']);
@@ -38,7 +41,10 @@ class UserService
 
     public function update(User $user, array $data): User
     {
-        $user->fill(Arr::only($data, ['name', 'email', 'phone', 'password', 'province_id', 'city_id']))->save();
+        $user->fill(Arr::only($data, [
+            'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
+            'marriage_status', 'birthday', 'gender', 'address',
+        ]))->save();
 
         if (array_key_exists('roles', $data)) {
             $user->syncRoles($data['roles']);

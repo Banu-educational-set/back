@@ -150,9 +150,11 @@ Route::middleware([
         Route::get('my-terms/{term}', [EnrollmentController::class, 'showTerm']);
 
         Route::get('exam-results', [StudentResultsController::class, 'examResults']);
+        Route::get('exams', [StudentResultsController::class, 'exams']);
         Route::get('homeworks', [StudentResultsController::class, 'homeworks']);
 
         Route::get('tickets', [StudentTicketController::class, 'index']);
+        Route::get('tickets/stats', [StudentTicketController::class, 'stats']);
         Route::post('tickets', [StudentTicketController::class, 'store']);
         Route::get('tickets/{ticket}', [StudentTicketController::class, 'show']);
         Route::post('tickets/{ticket}/messages', [StudentTicketController::class, 'postMessage']);
@@ -174,8 +176,8 @@ Route::middleware(['auth:sanctum', 'role:'.RoleName::Admin->value])
         Route::get('terms/{term}/enrollees', [AdminEnrollmentController::class, 'index']);
         Route::post('terms/{term}/enrollees', [AdminEnrollmentController::class, 'store']);
 
-        Route::get('tickets', [StaffTicketController::class, 'index'])
-            ->defaults('staffScope', RoleName::Admin->value);
+        Route::get('tickets', [StaffTicketController::class, 'index']);
+        Route::get('tickets/stats', [StaffTicketController::class, 'stats']);
         Route::get('tickets/{ticket}', [StaffTicketController::class, 'show']);
         Route::post('tickets/{ticket}/messages', [StaffTicketController::class, 'postMessage']);
         Route::patch('tickets/{ticket}/status', [StaffTicketController::class, 'updateStatus']);
@@ -187,8 +189,7 @@ Route::middleware(['auth:sanctum', 'role:'.RoleName::Admin->value])
 Route::middleware(['auth:sanctum', 'role:'.RoleName::Counselor->value])
     ->prefix('counselor')
     ->group(function () {
-        Route::get('tickets', [StaffTicketController::class, 'index'])
-            ->defaults('staffScope', RoleName::Counselor->value);
+        Route::get('tickets', [StaffTicketController::class, 'index']);
         Route::get('tickets/{ticket}', [StaffTicketController::class, 'show']);
         Route::post('tickets/{ticket}/messages', [StaffTicketController::class, 'postMessage']);
         Route::patch('tickets/{ticket}/status', [StaffTicketController::class, 'updateStatus']);

@@ -53,8 +53,17 @@ class MediaService
         string $collection,
         bool $singleFile = false,
     ): Media {
+        // Idempotent: if the media is already attached to this exact owner
+        // and collection, the update payload simply re-listed an existing file.
+        // Return it unchanged instead of erroring.
+        if ($media->model_type === $owner->getMorphClass()
+            && (int) $media->model_id === (int) $owner->getKey()
+            && $media->collection_name === $collection) {
+            return $media;
+        }
+
         if (! $media->isPending()) {
-            throw new RuntimeException('Media is already attached.');
+            throw new RuntimeException('Media is already attached to a different resource.');
         }
 
         if ($media->uploaded_by !== $uploader->id) {

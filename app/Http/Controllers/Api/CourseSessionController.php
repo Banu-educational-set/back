@@ -39,8 +39,7 @@ class CourseSessionController extends Controller
             && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value]);
 
         if ($isStudent) {
-            $term = $session->course?->term;
-            if ($session->course?->term_id && ! $term?->isOpenNow()) {
+            if (! $session->course?->term?->isOpenNow()) {
                 return ApiResponse::error('This term is not currently open.', null, 403);
             }
 

@@ -26,7 +26,6 @@ class CourseController extends Controller
         $courses = $this->courseService->paginate(
             viewer: $request->user(),
             termId: $request->filled('term_id') ? (int) $request->input('term_id') : null,
-            orphansOnly: ! $request->has('term_id'),
             perPage: (int) $request->integer('per_page', 20),
         );
 
@@ -40,7 +39,7 @@ class CourseController extends Controller
             && ! $user->hasAnyRole([RoleName::Admin->value, RoleName::Teacher->value]);
 
         if ($isStudent) {
-            if ($course->term_id && ! $course->term?->isOpenNow()) {
+            if (! $course->term?->isOpenNow()) {
                 return ApiResponse::error('This term is not currently open.', null, 403);
             }
 

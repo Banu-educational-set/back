@@ -23,8 +23,7 @@ class CourseSessionService
                 $this->mustFilterInactive($viewer),
                 fn ($q) => $q->whereHas('course', fn ($c) => $c
                     ->where('is_active', true)
-                    ->where(fn ($c) => $c->whereNull('term_id')
-                        ->orWhereHas('term', fn ($t) => $t->openNow())))
+                    ->whereHas('term', fn ($t) => $t->openNow()))
             )
             ->orderByDesc('id')
             ->paginate($perPage);

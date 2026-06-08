@@ -27,9 +27,14 @@ class AuthService
             'name' => $data['name'],
             'phone' => $data['phone'],
             'email' => $data['email'] ?? null,
+            'national_code' => $data['national_code'] ?? null,
             'password' => $data['password'],
             'province_id' => $data['province_id'] ?? null,
             'city_id' => $data['city_id'] ?? null,
+            'marriage_status' => $data['marriage_status'] ?? null,
+            'birthday' => $data['birthday'] ?? null,
+            'gender' => $data['gender'] ?? null,
+            'address' => $data['address'] ?? null,
         ]);
 
         $user->assignRole(RoleName::Student->value);

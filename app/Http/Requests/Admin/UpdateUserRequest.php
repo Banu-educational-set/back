@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\Gender;
+use App\Enums\MarriageStatus;
 use App\Enums\RoleName;
 use App\Models\City;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,11 +28,16 @@ class UpdateUserRequest extends FormRequest
             'name' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
             'phone' => ['nullable', 'string', 'max:32'],
+            'national_code' => ['sometimes', 'nullable', 'string', 'digits:10', Rule::unique('users', 'national_code')->ignore($userId)],
             'password' => ['sometimes', Password::min(8)],
             'roles' => ['sometimes', 'array'],
             'roles.*' => ['string', Rule::in(RoleName::values())],
             'province_id' => ['sometimes', 'nullable', 'integer', 'exists:provinces,id'],
             'city_id' => ['sometimes', 'nullable', 'integer', 'exists:cities,id'],
+            'marriage_status' => ['sometimes', 'nullable', 'string', Rule::in(MarriageStatus::values())],
+            'birthday' => ['sometimes', 'nullable', 'date', 'before_or_equal:today'],
+            'gender' => ['sometimes', 'nullable', 'string', Rule::in(Gender::values())],
+            'address' => ['sometimes', 'nullable', 'string', 'max:1000'],
         ];
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\Gender;
+use App\Enums\MarriageStatus;
 use App\Enums\RoleName;
 use App\Models\City;
 use Illuminate\Foundation\Http\FormRequest;
@@ -22,11 +24,16 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['nullable', 'string', 'max:32'],
+            'national_code' => ['nullable', 'string', 'digits:10', 'unique:users,national_code'],
             'password' => ['required', Password::min(8)],
             'roles' => ['array'],
             'roles.*' => ['string', Rule::in(RoleName::values())],
             'province_id' => ['nullable', 'integer', 'exists:provinces,id'],
             'city_id' => ['nullable', 'integer', 'exists:cities,id'],
+            'marriage_status' => ['nullable', 'string', Rule::in(MarriageStatus::values())],
+            'birthday' => ['nullable', 'date', 'before_or_equal:today'],
+            'gender' => ['nullable', 'string', Rule::in(Gender::values())],
+            'address' => ['nullable', 'string', 'max:1000'],
         ];
     }
 

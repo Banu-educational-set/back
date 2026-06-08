@@ -14,19 +14,17 @@ class CourseService
 {
     public function __construct(private readonly MediaService $mediaService) {}
 
-    public function paginate(?User $viewer, ?int $termId, bool $orphansOnly = false, int $perPage = 20): LengthAwarePaginator
+    public function paginate(?User $viewer, ?int $termId, int $perPage = 20): LengthAwarePaginator
     {
         $paginator = Course::query()
             ->with(['term', 'teacher.avatar', 'cover'])
             ->withCount('sessions')
             ->when($termId, fn ($q, $id) => $q->where('term_id', $id))
-            ->when($orphansOnly, fn ($q) => $q->whereNull('term_id'))
             ->when(
                 $this->mustFilterInactive($viewer),
                 fn ($q) => $q
                     ->where('is_active', true)
-                    ->where(fn ($q) => $q->whereNull('term_id')
-                        ->orWhereHas('term', fn ($t) => $t->openNow()))
+                    ->whereHas('term', fn ($t) => $t->openNow())
             )
             ->orderByDesc('id')
             ->paginate($perPage);

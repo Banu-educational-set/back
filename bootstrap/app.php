@@ -39,10 +39,12 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        $exceptions->render(function (AuthenticationException $e, Request $r) use ($isApi) {
-            if ($isApi($r)) {
-                return ApiResponse::error('Unauthenticated.', null, 401);
-            }
+        // App is API-only — every unauthenticated request gets a 401 JSON
+        // regardless of Accept header or path. Returning unconditionally
+        // avoids edge cases where the default handler tries to redirect to
+        // a non-existent login page.
+        $exceptions->render(function (AuthenticationException $e, Request $r) {
+            return ApiResponse::error('Unauthenticated.', null, 401);
         });
 
         $exceptions->render(function (AuthorizationException $e, Request $r) use ($isApi) {

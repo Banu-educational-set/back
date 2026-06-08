@@ -18,7 +18,7 @@ class StoreCourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'term_id' => ['nullable', 'integer', 'exists:terms,id'],
+            'term_id' => ['required', 'integer', 'exists:terms,id'],
             'teacher_id' => ['nullable', 'integer', Rule::exists('users', 'id')],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -45,11 +45,11 @@ class StoreCourseRequest extends FormRequest
                 return;
             }
 
-            $termId = $this->filled('term_id') ? (int) $this->input('term_id') : null;
+            $termId = (int) $this->input('term_id');
             $mismatched = Course::query()
                 ->whereIn('id', $prereqIds)
                 ->get(['id', 'term_id'])
-                ->filter(fn (Course $c) => (int) $c->term_id !== (int) $termId)
+                ->filter(fn (Course $c) => (int) $c->term_id !== $termId)
                 ->pluck('id')
                 ->all();
 

@@ -17,7 +17,7 @@ class UpdateCourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'term_id' => ['sometimes', 'nullable', 'integer', 'exists:terms,id'],
+            'term_id' => ['sometimes', 'integer', 'exists:terms,id'],
             'teacher_id' => ['nullable', 'integer', 'exists:users,id'],
             'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -51,13 +51,13 @@ class UpdateCourseRequest extends FormRequest
             }
 
             $termId = $this->has('term_id')
-                ? ($this->input('term_id') === null ? null : (int) $this->input('term_id'))
-                : $course->term_id;
+                ? (int) $this->input('term_id')
+                : (int) $course->term_id;
 
             $mismatched = Course::query()
                 ->whereIn('id', $prereqIds)
                 ->get(['id', 'term_id'])
-                ->filter(fn (Course $c) => (int) $c->term_id !== (int) $termId)
+                ->filter(fn (Course $c) => (int) $c->term_id !== $termId)
                 ->pluck('id')
                 ->all();
 

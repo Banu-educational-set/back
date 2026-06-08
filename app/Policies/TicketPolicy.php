@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\RoleName;
-use App\Enums\TicketTargetRole;
+use App\Enums\TicketType;
 use App\Models\Ticket;
 use App\Models\User;
 
@@ -34,12 +34,12 @@ class TicketPolicy
 
     private function staffCanHandle(User $user, Ticket $ticket): bool
     {
-        if ($user->hasRole(RoleName::Admin->value) && $ticket->target_role === TicketTargetRole::Admin) {
+        if ($user->hasRole(RoleName::Admin->value)) {
             return true;
         }
 
-        if ($user->hasRole(RoleName::Counselor->value) && $ticket->target_role === TicketTargetRole::Counselor) {
-            return true;
+        if ($user->hasRole(RoleName::Counselor->value)) {
+            return $ticket->type === TicketType::Advise;
         }
 
         return false;

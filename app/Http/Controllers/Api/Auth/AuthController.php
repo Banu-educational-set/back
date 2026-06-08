@@ -67,7 +67,10 @@ class AuthController extends Controller
         $user = $request->user();
         $validated = $request->validated();
 
-        $user->fill(Arr::only($validated, ['name', 'email', 'phone', 'password', 'province_id', 'city_id']))->save();
+        $user->fill(Arr::only($validated, [
+            'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
+            'marriage_status', 'birthday', 'gender', 'address',
+        ]))->save();
 
         if ($mediaId = Arr::get($validated, 'avatar_media_id')) {
             $this->mediaService->attachTo(
