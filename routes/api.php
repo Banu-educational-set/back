@@ -54,7 +54,7 @@ Route::middleware('external.api_key')->prefix('external')->group(function () {
 /*
  * Authenticated (any role)
  */
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'approved'])->group(function () {
 
     Route::prefix('auth')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
@@ -90,6 +90,7 @@ Route::middleware('auth:sanctum')->group(function () {
  */
 Route::middleware([
     'auth:sanctum',
+    'approved',
     'role:'.RoleName::Admin->value.'|'.RoleName::Teacher->value,
 ])->group(function () {
     Route::get('terms', [TermController::class, 'index']);
@@ -126,7 +127,7 @@ Route::middleware([
 /*
  * Admin-only delete (terms/courses/sessions/exams/homeworks)
  */
-Route::middleware(['auth:sanctum', 'role:'.RoleName::Admin->value])->group(function () {
+Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Admin->value])->group(function () {
     Route::delete('terms/{term}', [TermController::class, 'destroy']);
     Route::delete('courses/{course}', [CourseController::class, 'destroy']);
     Route::delete('sessions/{session}', [CourseSessionController::class, 'destroy']);
@@ -139,6 +140,7 @@ Route::middleware(['auth:sanctum', 'role:'.RoleName::Admin->value])->group(funct
  */
 Route::middleware([
     'auth:sanctum',
+    'approved',
     'role:'.RoleName::Student->value.'|'.RoleName::Missionary->value,
 ])->group(function () {
     Route::post('exams/{exam}/start', [ExamController::class, 'start']);
@@ -164,11 +166,12 @@ Route::middleware([
 /*
  * Admin
  */
-Route::middleware(['auth:sanctum', 'role:'.RoleName::Admin->value])
+Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Admin->value])
     ->prefix('admin')
     ->group(function () {
         Route::apiResource('users', AdminUserController::class);
         Route::patch('users/{user}/role', [AdminUserController::class, 'assignRole']);
+        Route::patch('users/{user}/status', [AdminUserController::class, 'setStatus']);
 
         Route::get('homeworks', [HomeworkController::class, 'index']);
         Route::get('exams', [ExamController::class, 'index']);
@@ -186,7 +189,7 @@ Route::middleware(['auth:sanctum', 'role:'.RoleName::Admin->value])
 /*
  * Counselor
  */
-Route::middleware(['auth:sanctum', 'role:'.RoleName::Counselor->value])
+Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Counselor->value])
     ->prefix('counselor')
     ->group(function () {
         Route::get('tickets', [StaffTicketController::class, 'index']);
@@ -198,7 +201,7 @@ Route::middleware(['auth:sanctum', 'role:'.RoleName::Counselor->value])
 /*
  * Missionary
  */
-Route::middleware(['auth:sanctum', 'role:'.RoleName::Missionary->value])
+Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Missionary->value])
     ->prefix('missionary')
     ->group(function () {
         Route::get('requests', [MissionaryRequestController::class, 'index']);

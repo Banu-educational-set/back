@@ -31,6 +31,7 @@ class RegisterRequest extends FormRequest
             'birthday' => ['nullable', 'date', 'before_or_equal:today'],
             'gender' => ['nullable', 'string', Rule::in(Gender::values())],
             'address' => ['nullable', 'string', 'max:1000'],
+            'bio' => ['nullable', 'string', 'max:2000'],
         ];
     }
 

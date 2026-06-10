@@ -30,9 +30,9 @@ class StoreExamRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $v) {
-            // Defaults match the DB column defaults (Persian academic norm: 20/12).
-            $score = $this->has('score') ? $this->integer('score') : 20;
-            $min = $this->has('minimum_score') ? $this->integer('minimum_score') : 12;
+            // Defaults match the DB column defaults: exams score out of 100.
+            $score = $this->has('score') ? $this->integer('score') : 100;
+            $min = $this->has('minimum_score') ? $this->integer('minimum_score') : 50;
             if ($score > 0 && $min > $score) {
                 $v->errors()->add('minimum_score', 'minimum_score cannot exceed score.');
             }

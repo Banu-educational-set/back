@@ -34,6 +34,7 @@ class UpdateProfileRequest extends FormRequest
             'birthday' => ['sometimes', 'nullable', 'date', 'before_or_equal:today'],
             'gender' => ['sometimes', 'nullable', 'string', Rule::in(Gender::values())],
             'address' => ['sometimes', 'nullable', 'string', 'max:1000'],
+            'bio' => ['sometimes', 'nullable', 'string', 'max:2000'],
         ];
     }
 

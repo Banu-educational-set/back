@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\UserStatus;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
@@ -27,10 +28,14 @@ class UserService
 
     public function create(array $data): User
     {
-        $user = User::create(Arr::only($data, [
-            'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
-            'marriage_status', 'birthday', 'gender', 'address',
-        ]));
+        $user = User::create(array_merge(
+            Arr::only($data, [
+                'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
+                'marriage_status', 'birthday', 'gender', 'address', 'bio',
+            ]),
+            // Admin-created users skip the verification flow and start approved.
+            ['status' => $data['status'] ?? UserStatus::Approved->value],
+        ));
 
         if (! empty($data['roles'])) {
             $user->syncRoles($data['roles']);
@@ -43,7 +48,7 @@ class UserService
     {
         $user->fill(Arr::only($data, [
             'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
-            'marriage_status', 'birthday', 'gender', 'address',
+            'marriage_status', 'birthday', 'gender', 'address', 'bio',
         ]))->save();
 
         if (array_key_exists('roles', $data)) {

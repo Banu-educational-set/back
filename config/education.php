@@ -2,6 +2,7 @@
 
 return [
     'terms_required_for_missionary' => (int) env('TERMS_REQUIRED_FOR_MISSIONARY', 3),
+    'max_exam_attempts' => (int) env('MAX_EXAM_ATTEMPTS', 3),
 
     'external_api_key' => env('WORDPRESS_MISSIONARY_API_KEY', env('EXTERNAL_API_KEY')),
 

@@ -170,14 +170,79 @@ class ExamScoringService
             return $activeAttempt->fresh('answers');
         });
 
+        // Failure path: if this attempt was a fail AND the user has now used
+        // up all retries on this exam, wipe every exam_attempt and
+        // homework_submission for the user inside this session so they can
+        // start the session from scratch.
+        $resetSession = false;
+        if (! $isPassed) {
+            $maxAttempts = (int) config('education.max_exam_attempts', 3);
+            $failedCount = ExamAttempt::query()
+                ->where('user_id', $user->id)
+                ->where('exam_id', $exam->id)
+                ->whereNotNull('submitted_at')
+                ->where('is_passed', false)
+                ->count();
+
+            if ($maxAttempts > 0 && $failedCount >= $maxAttempts) {
+                $this->resetSessionDataForUser($user, $exam);
+                $resetSession = true;
+            }
+        }
+
         // Re-evaluate term completion on every submission — failing this exam
         // can still raise the student's term grade thanks to the new
-        // point-sum model.
-        $term = $exam->session?->course?->term;
-        if ($term) {
-            $this->completionService->evaluate($user, $term);
+        // point-sum model. Skip when we just wiped the session (no change to
+        // evaluate anyway, and the freshly-deleted attempt is gone).
+        if (! $resetSession) {
+            $term = $exam->session?->course?->term;
+            if ($term) {
+                $this->completionService->evaluate($user, $term);
+            }
         }
 
         return $attempt;
+    }
+
+    /**
+     * Delete every exam_attempt and homework_submission for the user under
+     * the same session as $exam. Called when the user exhausts the retake
+     * limit on any exam in that session.
+     */
+    private function resetSessionDataForUser(User $user, Exam $exam): void
+    {
+        $sessionId = $exam->session_id;
+        if (! $sessionId) {
+            return;
+        }
+
+        DB::transaction(function () use ($user, $sessionId) {
+            $examIds = DB::table('exams')
+                ->where('session_id', $sessionId)
+                ->pluck('id');
+
+            if ($examIds->isNotEmpty()) {
+                $attemptIds = DB::table('exam_attempts')
+                    ->where('user_id', $user->id)
+                    ->whereIn('exam_id', $examIds)
+                    ->pluck('id');
+
+                if ($attemptIds->isNotEmpty()) {
+                    DB::table('exam_answers')->whereIn('attempt_id', $attemptIds)->delete();
+                    DB::table('exam_attempts')->whereIn('id', $attemptIds)->delete();
+                }
+            }
+
+            $homeworkIds = DB::table('homeworks')
+                ->where('session_id', $sessionId)
+                ->pluck('id');
+
+            if ($homeworkIds->isNotEmpty()) {
+                DB::table('homework_submissions')
+                    ->where('user_id', $user->id)
+                    ->whereIn('homework_id', $homeworkIds)
+                    ->delete();
+            }
+        });
     }
 }

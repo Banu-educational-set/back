@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Enums\RoleName;
 use App\Http\Controllers\Controller;
+use App\Enums\UserStatus;
 use App\Http\Requests\Admin\AssignRoleRequest;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\Admin\UpdateUserStatusRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\UserService;
@@ -86,5 +88,21 @@ class UserController extends Controller
         $updated = $this->userService->update($user, ['roles' => $request->validated('roles')]);
 
         return ApiResponse::success(new UserResource($updated), 'Roles updated.');
+    }
+
+    public function setStatus(UpdateUserStatusRequest $request, User $user): JsonResponse
+    {
+        $status = UserStatus::from($request->validated('status'));
+        $user->forceFill(['status' => $status->value])->save();
+
+        // Blocking should kill the user's outstanding sessions immediately.
+        if ($status === UserStatus::Blocked) {
+            $user->tokens()->delete();
+        }
+
+        return ApiResponse::success(
+            new UserResource($user->fresh(['roles', 'avatar', 'province', 'city'])),
+            'User status updated.',
+        );
     }
 }

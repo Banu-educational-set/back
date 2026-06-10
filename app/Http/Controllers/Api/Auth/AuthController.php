@@ -69,7 +69,7 @@ class AuthController extends Controller
 
         $user->fill(Arr::only($validated, [
             'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
-            'marriage_status', 'birthday', 'gender', 'address',
+            'marriage_status', 'birthday', 'gender', 'address', 'bio',
         ]))->save();
 
         if ($mediaId = Arr::get($validated, 'avatar_media_id')) {

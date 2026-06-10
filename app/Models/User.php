@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserStatus;
 use App\Traits\HasMedia;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
-        'marriage_status', 'birthday', 'gender', 'address',
+        'marriage_status', 'birthday', 'gender', 'address', 'bio', 'status',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -31,6 +32,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'birthday' => 'date',
+            'status' => UserStatus::class,
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\RoleName;
+use App\Enums\UserStatus;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Carbon;
@@ -35,6 +36,8 @@ class AuthService
             'birthday' => $data['birthday'] ?? null,
             'gender' => $data['gender'] ?? null,
             'address' => $data['address'] ?? null,
+            'bio' => $data['bio'] ?? null,
+            'status' => UserStatus::Pending->value,
         ]);
 
         $user->assignRole(RoleName::Student->value);
@@ -57,6 +60,10 @@ class AuthService
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             throw new AuthenticationException('Invalid credentials.');
+        }
+
+        if ($user->status === UserStatus::Blocked) {
+            throw new AuthenticationException('Your account has been blocked.');
         }
 
         $token = $user->createToken($credentials['device_name'] ?? 'api')->plainTextToken;
@@ -101,6 +108,16 @@ class AuthService
 
         if (! $user) {
             throw new AuthenticationException('Invalid credentials.');
+        }
+
+        if ($user->status === UserStatus::Blocked) {
+            throw new AuthenticationException('Your account has been blocked.');
+        }
+
+        // First successful OTP verification confirms the user's phone, so
+        // a still-pending account is bumped up to verified.
+        if ($user->status === UserStatus::Pending) {
+            $user->forceFill(['status' => UserStatus::Verified->value])->save();
         }
 
         $token = $user->createToken($deviceName ?? 'api')->plainTextToken;
