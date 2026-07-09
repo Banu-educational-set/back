@@ -19,10 +19,13 @@ class CourseSessionResource extends JsonResource
             'description' => $this->description,
             'type' => $this->type instanceof \BackedEnum ? $this->type->value : $this->type,
             'starts_at' => $this->starts_at?->toIso8601String(),
+            'duration_minutes' => $this->duration_minutes,
             'location' => $this->location,
             'link' => $this->link,
             'prerequisite_session_ids' => array_values(array_map('intval', $this->prerequisite_session_ids ?? [])),
             'prerequisite_sessions' => CourseSessionResource::collection($this->whenLoaded('prerequisiteSessions')),
+            'exams_count' => $this->when(isset($this->exams_count), (int) $this->exams_count),
+            'homeworks_count' => $this->when(isset($this->homeworks_count), (int) $this->homeworks_count),
             'your_average' => $this->when(
                 $this->isStudentRequester($request),
                 fn () => $this->roundOrNull(app(GradeService::class)->studentSessionAverage($request->user(), $this->resource)),

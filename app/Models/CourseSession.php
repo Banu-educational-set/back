@@ -21,6 +21,7 @@ class CourseSession extends Model
         'description',
         'type',
         'starts_at',
+        'duration_minutes',
         'location',
         'link',
         'prerequisite_session_ids',
@@ -28,6 +29,7 @@ class CourseSession extends Model
 
     protected $casts = [
         'starts_at' => 'datetime',
+        'duration_minutes' => 'integer',
         'type' => SessionType::class,
         'prerequisite_session_ids' => 'array',
     ];

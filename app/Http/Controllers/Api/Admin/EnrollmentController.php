@@ -24,8 +24,8 @@ class EnrollmentController extends Controller
         $status = $request->input('status');
         if ($status !== null && ! in_array($status, EnrollmentStatus::values(), true)) {
             return ApiResponse::error(
-                'Invalid status. Allowed: '.implode(', ', EnrollmentStatus::values()).'.',
-                ['status' => ['Invalid value.']],
+                __('errors.invalid_value_allowed', ['label' => __('validation.attributes.status'), 'allowed' => implode('، ', EnrollmentStatus::values())]),
+                ['status' => [__('errors.invalid_value')]],
                 422,
             );
         }
@@ -51,8 +51,8 @@ class EnrollmentController extends Controller
 
         if (! $user->hasAnyRole([RoleName::Student->value, RoleName::Missionary->value])) {
             return ApiResponse::error(
-                'User must have the student or missionary role.',
-                ['user_id' => ['Invalid role.']],
+                __('errors.user_must_be_student_or_missionary'),
+                ['user_id' => [__('errors.invalid_value')]],
                 422,
             );
         }

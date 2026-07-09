@@ -26,8 +26,8 @@ class UpdateUserRequest extends FormRequest
 
         return [
             'name' => ['sometimes', 'string', 'max:255'],
-            'email' => ['sometimes', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
-            'phone' => ['nullable', 'string', 'max:32'],
+            'email' => ['sometimes', 'nullable', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
+            'phone' => ['sometimes', 'string', 'max:32', Rule::unique('users', 'phone')->ignore($userId)],
             'national_code' => ['sometimes', 'nullable', 'string', 'digits:10', Rule::unique('users', 'national_code')->ignore($userId)],
             'password' => ['sometimes', Password::min(8)],
             'roles' => ['sometimes', 'array'],
@@ -68,7 +68,7 @@ class UpdateUserRequest extends FormRequest
                 ->exists();
 
             if (! $belongs) {
-                $v->errors()->add('city_id', 'City does not belong to the given province.');
+                $v->errors()->add('city_id', __('errors.city_not_in_province'));
             }
         });
     }

@@ -23,16 +23,12 @@ class ExamScoringService
 
         $term = $exam->session?->course?->term;
         if ($term && ! $term->isOpenNow()) {
-            throw new RuntimeException('This term is not currently open.');
+            throw new RuntimeException(__('errors.term_not_open'));
         }
 
         $questionSum = (int) $exam->questions->sum('score');
         if ($questionSum !== (int) $exam->score) {
-            throw new RuntimeException(sprintf(
-                'Exam is misconfigured: sum of question scores (%d) does not equal exam score (%d).',
-                $questionSum,
-                (int) $exam->score,
-            ));
+            throw new RuntimeException(__('errors.exam_misconfigured'));
         }
 
         $alreadyPassed = ExamAttempt::query()
@@ -41,7 +37,7 @@ class ExamScoringService
             ->where('is_passed', true)
             ->exists();
         if ($alreadyPassed) {
-            throw new RuntimeException('You have already passed this exam.');
+            throw new RuntimeException(__('errors.exam_already_passed'));
         }
 
         $existing = ExamAttempt::query()
@@ -75,7 +71,7 @@ class ExamScoringService
 
         $questionIds = $exam->questions->pluck('id')->all();
         if (count($questionIds) === 0) {
-            throw new RuntimeException('Exam has no questions.');
+            throw new RuntimeException(__('errors.exam_no_questions'));
         }
 
         // Block re-submit if the user has already passed this exam.
@@ -85,7 +81,7 @@ class ExamScoringService
             ->where('is_passed', true)
             ->exists();
         if ($alreadyPassed) {
-            throw new RuntimeException('You have already passed this exam.');
+            throw new RuntimeException(__('errors.exam_already_passed'));
         }
 
         $activeAttempt = ExamAttempt::query()
@@ -95,12 +91,12 @@ class ExamScoringService
             ->latest('id')
             ->first();
         if (! $activeAttempt) {
-            throw new RuntimeException('You must start the exam before submitting.');
+            throw new RuntimeException(__('errors.exam_not_started'));
         }
 
         $deadline = $activeAttempt->deadline_at;
         if ($deadline && now()->gt($deadline)) {
-            throw new RuntimeException('The exam window has closed.');
+            throw new RuntimeException(__('errors.exam_window_closed'));
         }
 
         $optionByQuestion = [];
@@ -120,10 +116,10 @@ class ExamScoringService
             $oid = isset($answer['selected_option_id']) ? (int) $answer['selected_option_id'] : null;
 
             if (! in_array($qid, $questionIds, true)) {
-                throw new RuntimeException("Question {$qid} does not belong to this exam.");
+                throw new RuntimeException(__('errors.answer_invalid_question'));
             }
             if ($oid !== null && ! isset($optionByQuestion[$qid][$oid])) {
-                throw new RuntimeException("Option {$oid} does not belong to question {$qid}.");
+                throw new RuntimeException(__('errors.answer_invalid_option'));
             }
             $cleanAnswers[$qid] = $oid;
         }

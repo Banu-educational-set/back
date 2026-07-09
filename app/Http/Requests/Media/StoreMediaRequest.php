@@ -40,15 +40,14 @@ class StoreMediaRequest extends FormRequest
 
             $ext = strtolower($file->getClientOriginalExtension() ?: $file->guessExtension() ?: '');
             if (! in_array($ext, $config['allowed_mimes'], true)) {
-                $v->errors()->add('file', sprintf(
-                    'File extension must be one of: %s.',
-                    implode(', ', $config['allowed_mimes']),
-                ));
+                $v->errors()->add('file', __('errors.file_ext_allowed', [
+                    'values' => implode('، ', $config['allowed_mimes']),
+                ]));
             }
 
             $maxKb = (int) $config['max_size_kb'];
             if ($file->getSize() > $maxKb * 1024) {
-                $v->errors()->add('file', "File exceeds {$maxKb} KB.");
+                $v->errors()->add('file', __('errors.file_exceeds', ['max' => $maxKb]));
             }
         });
     }

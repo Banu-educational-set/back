@@ -23,6 +23,7 @@ class StoreSessionRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'type' => ['required', 'string', Rule::in(SessionType::values())],
             'starts_at' => ['nullable', 'date'],
+            'duration_minutes' => ['nullable', 'integer', 'min:1', 'max:100000'],
             'location' => ['nullable', 'string', 'max:255'],
             'link' => ['nullable', 'url', 'max:500'],
             'media_ids' => ['nullable', 'array'],
@@ -49,7 +50,7 @@ class StoreSessionRequest extends FormRequest
                 ->all();
 
             if ($mismatched !== []) {
-                $v->errors()->add('prerequisite_session_ids', 'Prerequisite sessions must belong to the same course as this session.');
+                $v->errors()->add('prerequisite_session_ids', __('errors.session_prereq_same_course'));
             }
         });
     }

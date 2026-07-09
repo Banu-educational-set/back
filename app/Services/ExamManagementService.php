@@ -50,7 +50,7 @@ class ExamManagementService
         $options = $data['options'] ?? [];
         $correct = array_filter($options, fn ($o) => ! empty($o['is_correct']));
         if (count($correct) !== 1) {
-            throw new RuntimeException('Each question must have exactly one correct option.');
+            throw new RuntimeException(__('errors.each_question_one_correct'));
         }
 
         return DB::transaction(function () use ($exam, $data, $options) {

@@ -37,7 +37,7 @@ class UpdateTermRequest extends FormRequest
             $score = $this->has('score') ? $this->integer('score') : (int) ($term?->score ?? 0);
             $min = $this->has('minimum_score') ? $this->integer('minimum_score') : (int) ($term?->minimum_score ?? 0);
             if ($score > 0 && $min > $score) {
-                $v->errors()->add('minimum_score', 'minimum_score cannot exceed score.');
+                $v->errors()->add('minimum_score', __('errors.minimum_score_gt_score'));
             }
         });
     }

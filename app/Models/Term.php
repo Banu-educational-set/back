@@ -6,6 +6,7 @@ use App\Traits\HasMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Term extends Model
@@ -30,6 +31,11 @@ class Term extends Model
     public function enrollments(): HasMany
     {
         return $this->hasMany(TermEnrollment::class);
+    }
+
+    public function termSessions(): HasManyThrough
+    {
+        return $this->hasManyThrough(CourseSession::class, Course::class, 'term_id', 'course_id');
     }
 
     public function cover(): MorphOne

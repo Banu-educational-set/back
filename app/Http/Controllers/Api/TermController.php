@@ -11,6 +11,7 @@ use App\Services\TermService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TermController extends Controller
 {
@@ -28,7 +29,11 @@ class TermController extends Controller
 
     public function show(Term $term): JsonResponse
     {
-        $term->loadCount(['courses', 'enrollments']);
+        $term->loadCount(['courses', 'enrollments', 'termSessions as sessions_count']);
+        $term->loadCount([
+            'termSessions as exams_count' => fn ($q) => $q->join('exams', 'exams.session_id', '=', 'course_sessions.id')->select(DB::raw('count(distinct exams.id)')),
+            'termSessions as homeworks_count' => fn ($q) => $q->join('homeworks', 'homeworks.session_id', '=', 'course_sessions.id')->select(DB::raw('count(distinct homeworks.id)')),
+        ]);
 
         return ApiResponse::success(new TermResource($term));
     }
@@ -37,14 +42,14 @@ class TermController extends Controller
     {
         $term = $this->termService->create($request->validated(), $request->user());
 
-        return ApiResponse::success(new TermResource($term), 'Term created.', 201);
+        return ApiResponse::success(new TermResource($term), __('messages.term_created'), 201);
     }
 
     public function update(UpdateTermRequest $request, Term $term): JsonResponse
     {
         $updated = $this->termService->update($term, $request->validated(), $request->user());
 
-        return ApiResponse::success(new TermResource($updated), 'Term updated.');
+        return ApiResponse::success(new TermResource($updated), __('messages.term_updated'));
     }
 
     public function destroy(Term $term): JsonResponse
@@ -52,6 +57,6 @@ class TermController extends Controller
         $this->authorize('delete', $term);
         $this->termService->delete($term);
 
-        return ApiResponse::success(null, 'Term deleted.');
+        return ApiResponse::success(null, __('messages.term_deleted'));
     }
 }

@@ -1,20 +1,28 @@
 <?php
 
 use App\Enums\RoleName;
+use App\Http\Controllers\Api\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Api\Admin\EnrollmentController as AdminEnrollmentController;
+use App\Http\Controllers\Api\Admin\MissionaryRequestController as AdminMissionaryRequestController;
 use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CourseSessionController;
 use App\Http\Controllers\Api\ExamController;
+use App\Http\Controllers\Api\External\MissionaryController as ExternalMissionaryController;
 use App\Http\Controllers\Api\External\MissionaryRequestController as ExternalMissionaryRequestController;
 use App\Http\Controllers\Api\HomeworkController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\MediaController;
+use App\Http\Controllers\Api\Counselor\DashboardController as CounselorDashboardController;
+use App\Http\Controllers\Api\Missionary\DashboardController as MissionaryDashboardController;
+use App\Http\Controllers\Api\Missionary\MemoryController as MissionaryMemoryController;
 use App\Http\Controllers\Api\Missionary\RequestController as MissionaryRequestController;
+use App\Http\Controllers\Api\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Api\RegisterDataController;
 use App\Http\Controllers\Api\Staff\TicketController as StaffTicketController;
+use App\Http\Controllers\Api\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Api\Student\EnrollmentController;
 use App\Http\Controllers\Api\Student\ResultsController as StudentResultsController;
 use App\Http\Controllers\Api\Student\TicketController as StudentTicketController;
@@ -49,6 +57,9 @@ Route::prefix('auth')->group(function () {
  */
 Route::middleware('external.api_key')->prefix('external')->group(function () {
     Route::post('missionary-requests', [ExternalMissionaryRequestController::class, 'store']);
+
+    Route::get('missionaries', [ExternalMissionaryController::class, 'index']);
+    Route::get('missionaries/{user}', [ExternalMissionaryController::class, 'show']);
 });
 
 /*
@@ -148,6 +159,8 @@ Route::middleware([
     Route::post('homeworks/{homework}/submit', [HomeworkController::class, 'submit']);
 
     Route::prefix('student')->group(function () {
+        Route::get('dashboard', [StudentDashboardController::class, 'index']);
+
         Route::get('my-terms', [EnrollmentController::class, 'myTerms']);
         Route::get('my-terms/{term}', [EnrollmentController::class, 'showTerm']);
 
@@ -169,9 +182,12 @@ Route::middleware([
 Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Admin->value])
     ->prefix('admin')
     ->group(function () {
+        Route::get('dashboard', [AdminDashboardController::class, 'index']);
+
         Route::apiResource('users', AdminUserController::class);
         Route::patch('users/{user}/role', [AdminUserController::class, 'assignRole']);
         Route::patch('users/{user}/status', [AdminUserController::class, 'setStatus']);
+        Route::get('users/{user}/register-data', [AdminUserController::class, 'registerData']);
 
         Route::get('homeworks', [HomeworkController::class, 'index']);
         Route::get('exams', [ExamController::class, 'index']);
@@ -184,6 +200,10 @@ Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Admin->value])
         Route::get('tickets/{ticket}', [StaffTicketController::class, 'show']);
         Route::post('tickets/{ticket}/messages', [StaffTicketController::class, 'postMessage']);
         Route::patch('tickets/{ticket}/status', [StaffTicketController::class, 'updateStatus']);
+
+        Route::get('missionary-requests', [AdminMissionaryRequestController::class, 'index']);
+        Route::get('missionary-requests/{missionaryRequest}', [AdminMissionaryRequestController::class, 'show']);
+        Route::patch('missionary-requests/{missionaryRequest}/status', [AdminMissionaryRequestController::class, 'updateStatus']);
     });
 
 /*
@@ -192,10 +212,21 @@ Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Admin->value])
 Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Counselor->value])
     ->prefix('counselor')
     ->group(function () {
+        Route::get('dashboard', [CounselorDashboardController::class, 'index']);
+
         Route::get('tickets', [StaffTicketController::class, 'index']);
         Route::get('tickets/{ticket}', [StaffTicketController::class, 'show']);
         Route::post('tickets/{ticket}/messages', [StaffTicketController::class, 'postMessage']);
         Route::patch('tickets/{ticket}/status', [StaffTicketController::class, 'updateStatus']);
+    });
+
+/*
+ * Teacher
+ */
+Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Teacher->value])
+    ->prefix('teacher')
+    ->group(function () {
+        Route::get('dashboard', [TeacherDashboardController::class, 'index']);
     });
 
 /*
@@ -204,7 +235,15 @@ Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Counselor->valu
 Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Missionary->value])
     ->prefix('missionary')
     ->group(function () {
+        Route::get('dashboard', [MissionaryDashboardController::class, 'index']);
+
         Route::get('requests', [MissionaryRequestController::class, 'index']);
         Route::get('requests/{missionaryRequest}', [MissionaryRequestController::class, 'show']);
         Route::patch('requests/{missionaryRequest}/status', [MissionaryRequestController::class, 'updateStatus']);
+
+        Route::get('memories', [MissionaryMemoryController::class, 'index']);
+        Route::post('memories', [MissionaryMemoryController::class, 'store']);
+        Route::get('memories/{memory}', [MissionaryMemoryController::class, 'show']);
+        Route::match(['put', 'patch'], 'memories/{memory}', [MissionaryMemoryController::class, 'update']);
+        Route::delete('memories/{memory}', [MissionaryMemoryController::class, 'destroy']);
     });

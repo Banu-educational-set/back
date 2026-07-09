@@ -13,8 +13,8 @@ class MissionaryRequest extends Model
 
     protected $fillable = [
         'missionary_id', 'external_source', 'external_reference_id',
-        'requester_name', 'requester_phone', 'requester_email',
-        'title', 'description', 'location', 'requested_date', 'status',
+        'requester_name', 'requester_phone',
+        'title', 'subject', 'description', 'location', 'requested_date', 'status',
     ];
 
     protected $casts = [

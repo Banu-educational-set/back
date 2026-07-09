@@ -61,7 +61,7 @@ class UpdateProfileRequest extends FormRequest
                 ->exists();
 
             if (! $belongs) {
-                $v->errors()->add('city_id', 'City does not belong to the given province.');
+                $v->errors()->add('city_id', __('errors.city_not_in_province'));
             }
         });
     }

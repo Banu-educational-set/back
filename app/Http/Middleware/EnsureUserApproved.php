@@ -31,11 +31,14 @@ class EnsureUserApproved
     ];
 
     /**
-     * Paths allowed for pending/verified users (but not blocked).
+     * Paths allowed for pending/verified users (but not blocked). Includes the
+     * media upload endpoint so an unapproved user can upload an avatar as part
+     * of editing their own profile before approval (attached via PATCH /me).
      */
     private const PROFILE_PATHS = [
         'api/me',
         'api/me/register-data',
+        'api/media',
     ];
 
     public function handle(Request $request, Closure $next): Response
@@ -64,15 +67,17 @@ class EnsureUserApproved
         }
 
         $message = match ($status) {
-            UserStatus::Pending => 'Please verify your phone via OTP to continue.',
-            UserStatus::Verified => 'Your account is awaiting admin approval.',
-            UserStatus::Blocked => 'Your account has been blocked.',
-            default => 'Account is not approved.',
+            UserStatus::Pending => __('errors.verify_phone'),
+            UserStatus::Verified => __('errors.awaiting_approval'),
+            UserStatus::Blocked => $user->block_reason
+                ? __('errors.account_blocked_reason', ['reason' => $user->block_reason])
+                : __('errors.account_blocked'),
+            default => __('errors.account_not_approved'),
         };
 
         return ApiResponse::error(
             $message,
-            ['status' => $status?->value],
+            ['status' => $status?->value, 'block_reason' => $status === UserStatus::Blocked ? $user->block_reason : null],
             403,
         );
     }

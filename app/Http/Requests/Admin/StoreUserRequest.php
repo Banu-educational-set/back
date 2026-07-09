@@ -22,8 +22,10 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'phone' => ['nullable', 'string', 'max:32'],
+            // Phone is the login/verification identifier (email is optional and
+            // never used for auth), so it's the required unique field here.
+            'email' => ['nullable', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['required', 'string', 'max:32', 'unique:users,phone'],
             'national_code' => ['nullable', 'string', 'digits:10', 'unique:users,national_code'],
             'password' => ['required', Password::min(8)],
             'roles' => ['array'],
@@ -50,7 +52,7 @@ class StoreUserRequest extends FormRequest
                 ->exists();
 
             if (! $belongs) {
-                $v->errors()->add('city_id', 'City does not belong to the given province.');
+                $v->errors()->add('city_id', __('errors.city_not_in_province'));
             }
         });
     }

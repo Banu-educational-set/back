@@ -21,6 +21,8 @@ class CourseResource extends JsonResource
             'is_active' => $this->is_active,
             'cover_url' => $this->cover?->url(),
             'sessions_count' => $this->when(isset($this->sessions_count), (int) $this->sessions_count),
+            'exams_count' => $this->when(isset($this->exams_count), (int) $this->exams_count),
+            'homeworks_count' => $this->when(isset($this->homeworks_count), (int) $this->homeworks_count),
             'prerequisite_course_ids' => array_values(array_map('intval', $this->prerequisite_course_ids ?? [])),
             'prerequisite_courses' => CourseResource::collection($this->whenLoaded('prerequisiteCourses')),
             'your_average' => $this->when(

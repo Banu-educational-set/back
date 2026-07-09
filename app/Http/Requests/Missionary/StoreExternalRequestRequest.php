@@ -26,8 +26,8 @@ class StoreExternalRequestRequest extends FormRequest
             'external_reference_id' => ['nullable', 'string', 'max:128'],
             'requester_name' => ['required', 'string', 'max:255'],
             'requester_phone' => ['nullable', 'string', 'max:32'],
-            'requester_email' => ['nullable', 'email', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
+            'subject' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'location' => ['nullable', 'string', 'max:255'],
             'requested_date' => ['nullable', 'date'],
@@ -42,7 +42,7 @@ class StoreExternalRequestRequest extends FormRequest
             }
             $missionary = \App\Models\User::find($this->integer('missionary_id'));
             if (! $missionary || ! $missionary->hasRole(RoleName::Missionary->value)) {
-                $v->errors()->add('missionary_id', 'missionary_id must reference a user with the missionary role.');
+                $v->errors()->add('missionary_id', __('errors.missionary_id_role'));
             }
         });
     }

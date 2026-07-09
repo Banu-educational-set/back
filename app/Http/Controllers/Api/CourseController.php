@@ -40,20 +40,24 @@ class CourseController extends Controller
 
         if ($isStudent) {
             if (! $course->term?->isOpenNow()) {
-                return ApiResponse::error('This term is not currently open.', null, 403);
+                return ApiResponse::error(__('errors.term_not_open'), null, 403);
             }
 
             $unmet = $this->prerequisiteService->courseUnmetPrerequisites($user, $course);
             if ($unmet !== []) {
                 return ApiResponse::error(
-                    'Prerequisites not met for this course.',
+                    __('errors.prereq_course_not_met'),
                     ['prerequisite_course_ids' => $unmet],
                     403,
                 );
             }
         }
 
-        $course->load(['term', 'teacher'])->loadCount('sessions');
+        $course->load(['term', 'teacher'])->loadCount([
+            'sessions',
+            'sessionExams as exams_count',
+            'sessionHomeworks as homeworks_count',
+        ]);
         $this->courseService->attachPrerequisiteCourses(collect([$course]));
 
         return ApiResponse::success(new CourseResource($course));
@@ -63,14 +67,14 @@ class CourseController extends Controller
     {
         $course = $this->courseService->create($request->validated(), $request->user());
 
-        return ApiResponse::success(new CourseResource($course), 'Course created.', 201);
+        return ApiResponse::success(new CourseResource($course), __('messages.course_created'), 201);
     }
 
     public function update(UpdateCourseRequest $request, Course $course): JsonResponse
     {
         $updated = $this->courseService->update($course, $request->validated(), $request->user());
 
-        return ApiResponse::success(new CourseResource($updated), 'Course updated.');
+        return ApiResponse::success(new CourseResource($updated), __('messages.course_updated'));
     }
 
     public function destroy(Course $course): JsonResponse
@@ -78,6 +82,6 @@ class CourseController extends Controller
         $this->authorize('delete', $course);
         $this->courseService->delete($course);
 
-        return ApiResponse::success(null, 'Course deleted.');
+        return ApiResponse::success(null, __('messages.course_deleted'));
     }
 }

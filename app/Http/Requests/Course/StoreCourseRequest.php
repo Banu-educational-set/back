@@ -36,7 +36,7 @@ class StoreCourseRequest extends FormRequest
             if ($this->filled('teacher_id')) {
                 $teacher = \App\Models\User::find($this->integer('teacher_id'));
                 if (! $teacher || ! $teacher->hasAnyRole([RoleName::Teacher->value, RoleName::Admin->value])) {
-                    $v->errors()->add('teacher_id', 'teacher_id must reference a user with the teacher role.');
+                    $v->errors()->add('teacher_id', __('errors.teacher_id_role'));
                 }
             }
 
@@ -54,7 +54,7 @@ class StoreCourseRequest extends FormRequest
                 ->all();
 
             if ($mismatched !== []) {
-                $v->errors()->add('prerequisite_course_ids', 'Prerequisite courses must belong to the same term as this course.');
+                $v->errors()->add('prerequisite_course_ids', __('errors.course_prereq_same_term'));
             }
         });
     }

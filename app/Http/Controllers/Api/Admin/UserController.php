@@ -11,6 +11,7 @@ use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Requests\Admin\UpdateUserStatusRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\RegisterDataService;
 use App\Services\UserService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -18,7 +19,10 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function __construct(private readonly UserService $userService) {}
+    public function __construct(
+        private readonly UserService $userService,
+        private readonly RegisterDataService $registerDataService,
+    ) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -34,8 +38,11 @@ class UserController extends Controller
             $invalid = array_values(array_diff($roles, RoleName::values()));
             if ($invalid !== []) {
                 return ApiResponse::error(
-                    'Invalid role(s): '.implode(', ', $invalid).'. Allowed: '.implode(', ', RoleName::values()).'.',
-                    ['roles' => ['Invalid value(s).']],
+                    __('errors.invalid_role_allowed', [
+                        'invalid' => implode('، ', $invalid),
+                        'allowed' => implode('، ', RoleName::values()),
+                    ]),
+                    ['roles' => [__('errors.invalid_value')]],
                     422,
                 );
             }
@@ -64,14 +71,14 @@ class UserController extends Controller
     {
         $user = $this->userService->create($request->validated());
 
-        return ApiResponse::success(new UserResource($user), 'User created.', 201);
+        return ApiResponse::success(new UserResource($user), __('messages.user_created'), 201);
     }
 
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         $updated = $this->userService->update($user, $request->validated());
 
-        return ApiResponse::success(new UserResource($updated), 'User updated.');
+        return ApiResponse::success(new UserResource($updated), __('messages.user_updated'));
     }
 
     public function destroy(User $user): JsonResponse
@@ -80,20 +87,35 @@ class UserController extends Controller
 
         $this->userService->delete($user);
 
-        return ApiResponse::success(null, 'User deleted.');
+        return ApiResponse::success(null, __('messages.user_deleted'));
     }
 
     public function assignRole(AssignRoleRequest $request, User $user): JsonResponse
     {
         $updated = $this->userService->update($user, ['roles' => $request->validated('roles')]);
 
-        return ApiResponse::success(new UserResource($updated), 'Roles updated.');
+        return ApiResponse::success(new UserResource($updated), __('messages.roles_updated'));
+    }
+
+    public function registerData(User $user): JsonResponse
+    {
+        $this->authorize('view', $user);
+
+        return ApiResponse::success(
+            $this->registerDataService->all($user),
+            __('messages.ok'),
+        );
     }
 
     public function setStatus(UpdateUserStatusRequest $request, User $user): JsonResponse
     {
         $status = UserStatus::from($request->validated('status'));
-        $user->forceFill(['status' => $status->value])->save();
+
+        $user->forceFill([
+            'status' => $status->value,
+            // Reason only makes sense while blocked; clear it on any other transition.
+            'block_reason' => $status === UserStatus::Blocked ? $request->validated('reason') : null,
+        ])->save();
 
         // Blocking should kill the user's outstanding sessions immediately.
         if ($status === UserStatus::Blocked) {
@@ -102,7 +124,7 @@ class UserController extends Controller
 
         return ApiResponse::success(
             new UserResource($user->fresh(['roles', 'avatar', 'province', 'city'])),
-            'User status updated.',
+            __('messages.user_status_updated'),
         );
     }
 }

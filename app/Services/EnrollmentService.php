@@ -17,7 +17,7 @@ class EnrollmentService
     public function enroll(User $user, Term $term): TermEnrollment
     {
         if (! $term->isOpenNow()) {
-            throw new RuntimeException('Term is not currently open for enrollment.');
+            throw new RuntimeException(__('errors.term_not_open_enrollment'));
         }
 
         $enrollment = DB::transaction(function () use ($user, $term) {
@@ -27,7 +27,7 @@ class EnrollmentService
                 ->first();
 
             if ($existing) {
-                throw new RuntimeException('Already enrolled in this term.');
+                throw new RuntimeException(__('errors.already_enrolled'));
             }
 
             return TermEnrollment::create([
@@ -47,7 +47,13 @@ class EnrollmentService
     public function paginateForUser(User $user, ?string $status, int $perPage = 20): LengthAwarePaginator
     {
         return TermEnrollment::query()
-            ->with(['term' => fn ($q) => $q->withCount(['courses', 'enrollments'])])
+            ->with(['term' => fn ($q) => $q
+                ->withCount(['courses', 'enrollments', 'termSessions as sessions_count'])
+                ->withCount([
+                    'termSessions as exams_count' => fn ($qq) => $qq->join('exams', 'exams.session_id', '=', 'course_sessions.id')->select(DB::raw('count(distinct exams.id)')),
+                    'termSessions as homeworks_count' => fn ($qq) => $qq->join('homeworks', 'homeworks.session_id', '=', 'course_sessions.id')->select(DB::raw('count(distinct homeworks.id)')),
+                ])
+            ])
             ->where('user_id', $user->id)
             ->when($status, fn ($q, $s) => $q->where('status', $s))
             ->orderByDesc('id')

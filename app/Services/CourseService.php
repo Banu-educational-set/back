@@ -18,7 +18,7 @@ class CourseService
     {
         $paginator = Course::query()
             ->with(['term', 'teacher.avatar', 'cover'])
-            ->withCount('sessions')
+            ->withCount(['sessions', 'sessionExams as exams_count', 'sessionHomeworks as homeworks_count'])
             ->when($termId, fn ($q, $id) => $q->where('term_id', $id))
             ->when(
                 $this->mustFilterInactive($viewer),

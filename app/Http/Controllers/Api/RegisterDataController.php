@@ -17,7 +17,7 @@ class RegisterDataController extends Controller
     {
         return ApiResponse::success(
             $this->service->all($request->user()),
-            'OK',
+            __('messages.ok'),
         );
     }
 
@@ -28,6 +28,6 @@ class RegisterDataController extends Controller
             $request->validated()['data'],
         );
 
-        return ApiResponse::success($data, 'Register data saved.');
+        return ApiResponse::success($data, __('messages.register_data_saved'));
     }
 }

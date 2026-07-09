@@ -44,7 +44,7 @@ class ExamController extends Controller
             $unmet = $this->prerequisiteService->sessionUnmetPrerequisites($user, $session);
             if ($unmet !== []) {
                 return ApiResponse::error(
-                    'Prerequisites not met for this session.',
+                    __('errors.prereq_session_not_met'),
                     ['prerequisite_session_ids' => $unmet],
                     403,
                 );
@@ -134,7 +134,7 @@ class ExamController extends Controller
             return ApiResponse::error($e->getMessage(), null, 422);
         }
 
-        return ApiResponse::success(new ExamAttemptResource($attempt), 'Exam started.', 201);
+        return ApiResponse::success(new ExamAttemptResource($attempt), __('messages.exam_started'), 201);
     }
 
     public function submit(SubmitExamRequest $request, Exam $exam): JsonResponse
@@ -151,21 +151,21 @@ class ExamController extends Controller
             return ApiResponse::error($e->getMessage(), null, 422);
         }
 
-        return ApiResponse::success(new ExamAttemptResource($attempt), 'Exam submitted.', 201);
+        return ApiResponse::success(new ExamAttemptResource($attempt), __('messages.exam_submitted'), 201);
     }
 
     public function store(StoreExamRequest $request): JsonResponse
     {
         $exam = $this->managementService->createExam($request->validated());
 
-        return ApiResponse::success(new ExamResource($exam), 'Exam created.', 201);
+        return ApiResponse::success(new ExamResource($exam), __('messages.exam_created'), 201);
     }
 
     public function update(UpdateExamRequest $request, Exam $exam): JsonResponse
     {
         $updated = $this->managementService->updateExam($exam, $request->validated());
 
-        return ApiResponse::success(new ExamResource($updated), 'Exam updated.');
+        return ApiResponse::success(new ExamResource($updated), __('messages.exam_updated'));
     }
 
     public function destroy(Exam $exam): JsonResponse
@@ -173,7 +173,7 @@ class ExamController extends Controller
         $this->authorize('delete', $exam);
         $this->managementService->deleteExam($exam);
 
-        return ApiResponse::success(null, 'Exam deleted.');
+        return ApiResponse::success(null, __('messages.exam_deleted'));
     }
 
     public function addQuestion(StoreQuestionRequest $request, Exam $exam): JsonResponse
@@ -184,13 +184,13 @@ class ExamController extends Controller
             return ApiResponse::error($e->getMessage(), null, 422);
         }
 
-        return ApiResponse::success(new ExamQuestionResource($question), 'Question added.', 201);
+        return ApiResponse::success(new ExamQuestionResource($question), __('messages.question_added'), 201);
     }
 
     public function addOption(StoreOptionRequest $request, ExamQuestion $question): JsonResponse
     {
         $option = $this->managementService->addOption($question, $request->validated());
 
-        return ApiResponse::success(new ExamOptionResource($option), 'Option added.', 201);
+        return ApiResponse::success(new ExamOptionResource($option), __('messages.option_added'), 201);
     }
 }

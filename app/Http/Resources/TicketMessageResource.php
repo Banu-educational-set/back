@@ -16,6 +16,7 @@ class TicketMessageResource extends JsonResource
             'message' => $this->message,
             'created_at' => $this->created_at?->toIso8601String(),
             'sender' => new UserResource($this->whenLoaded('sender')),
+            'media' => MediaResource::collection($this->whenLoaded('media')),
         ];
     }
 }

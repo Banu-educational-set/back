@@ -45,7 +45,7 @@ class UpdateCourseRequest extends FormRequest
             }
 
             if (in_array($course->id, $prereqIds, true)) {
-                $v->errors()->add('prerequisite_course_ids', 'A course cannot be its own prerequisite.');
+                $v->errors()->add('prerequisite_course_ids', __('errors.course_self_prereq'));
 
                 return;
             }
@@ -62,11 +62,11 @@ class UpdateCourseRequest extends FormRequest
                 ->all();
 
             if ($mismatched !== []) {
-                $v->errors()->add('prerequisite_course_ids', 'Prerequisite courses must belong to the same term as this course.');
+                $v->errors()->add('prerequisite_course_ids', __('errors.course_prereq_same_term'));
             }
 
             if (app(PrerequisiteService::class)->wouldCreateCourseCycle($course->id, $prereqIds)) {
-                $v->errors()->add('prerequisite_course_ids', 'Assigning these prerequisites would create a cycle.');
+                $v->errors()->add('prerequisite_course_ids', __('errors.course_prereq_cycle'));
             }
         });
     }

@@ -10,7 +10,10 @@ use App\Models\Course;
 use App\Models\CourseSession;
 use App\Models\HomeworkSubmission;
 use App\Models\Media;
+use App\Models\MissionaryMemory;
 use App\Models\Term;
+use App\Models\Ticket;
+use App\Models\TicketMessage;
 use App\Models\User;
 use App\Services\MediaService;
 use App\Support\ApiResponse;
@@ -31,7 +34,7 @@ class MediaController extends Controller
             uploader: $request->user(),
         );
 
-        return ApiResponse::success(new MediaResource($media), 'Media uploaded.', 201);
+        return ApiResponse::success(new MediaResource($media), __('messages.media_uploaded'), 201);
     }
 
     public function destroy(Request $request, Media $medium): JsonResponse
@@ -42,22 +45,27 @@ class MediaController extends Controller
         if ($owner === null) {
             // Pending uploads can be deleted by the uploader.
             if ($medium->uploaded_by !== $user->id && ! $user->hasRole(RoleName::Admin->value)) {
-                return ApiResponse::error('Forbidden.', null, 403);
+                return ApiResponse::error(__('errors.forbidden'), null, 403);
             }
             $this->mediaService->delete($medium);
 
-            return ApiResponse::success(null, 'Media deleted.');
+            return ApiResponse::success(null, __('messages.media_deleted'));
         }
 
-        $allowed = ($owner->is($user)) || $user->can('update', $owner);
+        $allowed = match (true) {
+            $owner instanceof Ticket => $user->can('view', $owner),
+            $owner instanceof TicketMessage => $owner->sender_id === $user->id || $user->can('view', $owner->ticket),
+            $owner instanceof MissionaryMemory => $owner->missionary_id === $user->id || $user->hasRole(RoleName::Admin->value),
+            default => $owner->is($user) || $user->can('update', $owner),
+        };
 
         if (! $allowed) {
-            return ApiResponse::error('Forbidden.', null, 403);
+            return ApiResponse::error(__('errors.forbidden'), null, 403);
         }
 
         $this->mediaService->delete($medium);
 
-        return ApiResponse::success(null, 'Media deleted.');
+        return ApiResponse::success(null, __('messages.media_deleted'));
     }
 
     /**
@@ -76,14 +84,14 @@ class MediaController extends Controller
                 || $medium->uploaded_by === $user->id;
 
             if (! $canAccessPending) {
-                return ApiResponse::error('Forbidden.', null, 403);
+                return ApiResponse::error(__('errors.forbidden'), null, 403);
             }
         } elseif (! $this->canDownload($user, $owner)) {
-            return ApiResponse::error('Forbidden.', null, 403);
+            return ApiResponse::error(__('errors.forbidden'), null, 403);
         }
 
         if (! Storage::disk($medium->disk)->exists($medium->file_path)) {
-            return ApiResponse::error('File missing on disk.', null, 404);
+            return ApiResponse::error(__('errors.file_missing'), null, 404);
         }
 
         return Storage::disk($medium->disk)->download($medium->file_path, $medium->file_name);
@@ -104,6 +112,15 @@ class MediaController extends Controller
             // (review policy).
             $owner instanceof HomeworkSubmission =>
                 $owner->user_id === $user->id || $user->can('review', $owner),
+
+            // Ticket / ticket-message attachments: anyone who can see the ticket
+            // (the student who owns it, or staff/counselor assigned to its type).
+            $owner instanceof Ticket => $user->can('view', $owner),
+            $owner instanceof TicketMessage => $user->can('view', $owner->ticket),
+
+            // Missionary memory media is public (shown in the external detail),
+            // so any authenticated user may download it too.
+            $owner instanceof MissionaryMemory => true,
 
             // Session/term/course media: any authenticated user can read these,
             // matching the read access of those resources.

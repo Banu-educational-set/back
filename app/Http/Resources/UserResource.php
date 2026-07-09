@@ -25,6 +25,7 @@ class UserResource extends JsonResource
             'address' => $this->address,
             'bio' => $this->bio,
             'status' => $this->status instanceof \BackedEnum ? $this->status->value : $this->status,
+            'block_reason' => $this->block_reason,
             'roles' => $this->whenLoaded('roles', fn () => $this->roles->pluck('name')),
             'avatar_url' => $this->avatar?->url(),
             'avatar_download_url' => $this->avatar?->downloadUrl(),

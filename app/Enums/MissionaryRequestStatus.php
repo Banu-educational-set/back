@@ -15,12 +15,23 @@ enum MissionaryRequestStatus: string
     }
 
     /**
-     * Statuses a missionary may transition to.
+     * Current statuses a missionary is allowed to transition FROM.
      *
      * @return array<int, string>
      */
-    public static function missionaryAssignable(): array
+    public static function missionarySources(): array
     {
-        return [self::Seen->value, self::Accepted->value, self::Rejected->value];
+        return [self::Pending->value, self::Seen->value];
+    }
+
+    /**
+     * Statuses a missionary may transition TO. Admins are not restricted and
+     * may set any of values().
+     *
+     * @return array<int, string>
+     */
+    public static function missionaryTargets(): array
+    {
+        return [self::Accepted->value, self::Rejected->value];
     }
 }

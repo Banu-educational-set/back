@@ -19,8 +19,8 @@ class MissionaryRequestService
             'external_reference_id' => $data['external_reference_id'] ?? null,
             'requester_name' => $data['requester_name'],
             'requester_phone' => $data['requester_phone'] ?? null,
-            'requester_email' => $data['requester_email'] ?? null,
             'title' => $data['title'],
+            'subject' => $data['subject'] ?? null,
             'description' => $data['description'] ?? null,
             'location' => $data['location'] ?? null,
             'requested_date' => $data['requested_date'] ?? null,
@@ -41,24 +41,59 @@ class MissionaryRequestService
             ->paginate(20);
     }
 
+    /**
+     * Admins see every request regardless of assignment.
+     */
+    public function listAll(int $perPage = 20): LengthAwarePaginator
+    {
+        return MissionaryRequest::query()
+            ->with('missionary')
+            ->orderByDesc('id')
+            ->paginate($perPage);
+    }
+
     public function updateStatus(User $missionary, MissionaryRequest $request, string $status): MissionaryRequest
     {
         if (! $missionary->hasRole(RoleName::Missionary->value)) {
-            throw new RuntimeException('Only missionaries can update requests.');
+            throw new RuntimeException(__('errors.missionary_only_update'));
         }
 
         if ($request->missionary_id !== null && $request->missionary_id !== $missionary->id) {
-            throw new RuntimeException('This request is assigned to another missionary.');
+            throw new RuntimeException(__('errors.request_assigned_other'));
         }
 
-        if (! in_array($status, MissionaryRequestStatus::missionaryAssignable(), true)) {
-            throw new RuntimeException('Status not allowed for missionary updates.');
+        $current = $request->status instanceof MissionaryRequestStatus
+            ? $request->status->value
+            : (string) $request->status;
+
+        if (! in_array($current, MissionaryRequestStatus::missionarySources(), true)) {
+            throw new RuntimeException(__('errors.missionary_source_states'));
+        }
+
+        if (! in_array($status, MissionaryRequestStatus::missionaryTargets(), true)) {
+            throw new RuntimeException(__('errors.missionary_target_states'));
         }
 
         $request->status = $status;
         if ($request->missionary_id === null) {
             $request->missionary_id = $missionary->id;
         }
+        $request->save();
+
+        return $request->fresh();
+    }
+
+    /**
+     * Admins may move a request from any status to any other status, without
+     * changing its missionary assignment.
+     */
+    public function updateStatusByAdmin(MissionaryRequest $request, string $status): MissionaryRequest
+    {
+        if (! in_array($status, MissionaryRequestStatus::values(), true)) {
+            throw new RuntimeException(__('errors.invalid_status'));
+        }
+
+        $request->status = $status;
         $request->save();
 
         return $request->fresh();

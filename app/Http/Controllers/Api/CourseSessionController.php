@@ -40,20 +40,20 @@ class CourseSessionController extends Controller
 
         if ($isStudent) {
             if (! $session->course?->term?->isOpenNow()) {
-                return ApiResponse::error('This term is not currently open.', null, 403);
+                return ApiResponse::error(__('errors.term_not_open'), null, 403);
             }
 
             $unmet = $this->prerequisiteService->sessionUnmetPrerequisites($user, $session);
             if ($unmet !== []) {
                 return ApiResponse::error(
-                    'Prerequisites not met for this session.',
+                    __('errors.prereq_session_not_met'),
                     ['prerequisite_session_ids' => $unmet],
                     403,
                 );
             }
         }
 
-        $session->load(['course.term', 'media']);
+        $session->load(['course.term', 'media'])->loadCount(['exams', 'homeworks']);
         $this->sessionService->attachPrerequisiteSessions(collect([$session]));
 
         return ApiResponse::success(new CourseSessionResource($session));
@@ -63,14 +63,14 @@ class CourseSessionController extends Controller
     {
         $session = $this->sessionService->create($request->validated(), $request->user());
 
-        return ApiResponse::success(new CourseSessionResource($session), 'Session created.', 201);
+        return ApiResponse::success(new CourseSessionResource($session), __('messages.session_created'), 201);
     }
 
     public function update(UpdateSessionRequest $request, CourseSession $session): JsonResponse
     {
         $updated = $this->sessionService->update($session, $request->validated(), $request->user());
 
-        return ApiResponse::success(new CourseSessionResource($updated), 'Session updated.');
+        return ApiResponse::success(new CourseSessionResource($updated), __('messages.session_updated'));
     }
 
     public function destroy(CourseSession $session): JsonResponse
@@ -78,6 +78,6 @@ class CourseSessionController extends Controller
         $this->authorize('delete', $session);
         $this->sessionService->delete($session);
 
-        return ApiResponse::success(null, 'Session deleted.');
+        return ApiResponse::success(null, __('messages.session_deleted'));
     }
 }

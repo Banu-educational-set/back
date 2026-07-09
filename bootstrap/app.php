@@ -36,7 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(function (ValidationException $e, Request $r) use ($isApi) {
             if ($isApi($r)) {
-                return ApiResponse::error('Validation error.', $e->errors(), 422);
+                return ApiResponse::error(__('errors.validation'), $e->errors(), 422);
             }
         });
 
@@ -45,36 +45,36 @@ return Application::configure(basePath: dirname(__DIR__))
         // avoids edge cases where the default handler tries to redirect to
         // a non-existent login page.
         $exceptions->render(function (AuthenticationException $e, Request $r) {
-            return ApiResponse::error('Unauthenticated.', null, 401);
+            return ApiResponse::error(__('errors.unauthenticated'), null, 401);
         });
 
         $exceptions->render(function (AuthorizationException $e, Request $r) use ($isApi) {
             if ($isApi($r)) {
-                return ApiResponse::error($e->getMessage() ?: 'Forbidden.', null, 403);
+                return ApiResponse::error(__('errors.forbidden'), null, 403);
             }
         });
 
         $exceptions->render(function (ModelNotFoundException $e, Request $r) use ($isApi) {
             if ($isApi($r)) {
-                return ApiResponse::error('Resource not found.', null, 404);
+                return ApiResponse::error(__('errors.resource_not_found'), null, 404);
             }
         });
 
         $exceptions->render(function (NotFoundHttpException $e, Request $r) use ($isApi) {
             if ($isApi($r)) {
-                return ApiResponse::error('Endpoint not found.', null, 404);
+                return ApiResponse::error(__('errors.endpoint_not_found'), null, 404);
             }
         });
 
         $exceptions->render(function (HttpException $e, Request $r) use ($isApi) {
             if ($isApi($r)) {
                 $status = $e->getStatusCode();
-                $msg = $e->getMessage() ?: match ($status) {
-                    401 => 'Unauthenticated.',
-                    403 => 'Forbidden.',
-                    404 => 'Not found.',
-                    405 => 'Method not allowed.',
-                    default => 'Request failed.',
+                $msg = match ($status) {
+                    401 => __('errors.unauthenticated'),
+                    403 => __('errors.forbidden'),
+                    404 => __('errors.not_found'),
+                    405 => __('errors.method_not_allowed'),
+                    default => __('errors.request_failed'),
                 };
 
                 return ApiResponse::error($msg, null, $status);

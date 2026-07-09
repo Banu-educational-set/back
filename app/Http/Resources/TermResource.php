@@ -22,6 +22,9 @@ class TermResource extends JsonResource
             'minimum_score' => (int) $this->minimum_score,
             'cover_url' => $this->cover?->url(),
             'courses_count' => $this->when(isset($this->courses_count), (int) $this->courses_count),
+            'sessions_count' => $this->when(isset($this->sessions_count), (int) $this->sessions_count),
+            'exams_count' => $this->when(isset($this->exams_count), (int) $this->exams_count),
+            'homeworks_count' => $this->when(isset($this->homeworks_count), (int) $this->homeworks_count),
             'students_count' => $this->when(isset($this->enrollments_count), (int) $this->enrollments_count),
             'your_average' => $this->when(
                 $this->isStudentRequester($request),

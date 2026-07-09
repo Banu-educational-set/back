@@ -17,7 +17,11 @@ class TermService
     {
         return Term::query()
             ->with('cover')
-            ->withCount(['courses', 'enrollments'])
+            ->withCount(['courses', 'enrollments', 'termSessions as sessions_count'])
+            ->withCount([
+                'termSessions as exams_count' => fn ($q) => $q->join('exams', 'exams.session_id', '=', 'course_sessions.id')->select(DB::raw('count(distinct exams.id)')),
+                'termSessions as homeworks_count' => fn ($q) => $q->join('homeworks', 'homeworks.session_id', '=', 'course_sessions.id')->select(DB::raw('count(distinct homeworks.id)')),
+            ])
             ->when($activeOnly, fn ($q) => $q->where('is_active', true))
             ->orderByDesc('id')
             ->paginate($perPage);

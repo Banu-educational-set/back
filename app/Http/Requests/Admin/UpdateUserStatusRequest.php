@@ -17,6 +17,7 @@ class UpdateUserStatusRequest extends FormRequest
     {
         return [
             'status' => ['required', 'string', Rule::in(UserStatus::values())],
+            'reason' => ['nullable', 'string', 'max:1000'],
         ];
     }
 }

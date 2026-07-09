@@ -21,7 +21,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
-        'marriage_status', 'birthday', 'gender', 'address', 'bio', 'status',
+        'marriage_status', 'birthday', 'gender', 'address', 'bio', 'status', 'block_reason',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -65,6 +65,11 @@ class User extends Authenticatable
     public function registerData(): HasMany
     {
         return $this->hasMany(RegisterData::class);
+    }
+
+    public function memories(): HasMany
+    {
+        return $this->hasMany(MissionaryMemory::class, 'missionary_id');
     }
 
     public function avatar(): MorphOne

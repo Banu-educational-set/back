@@ -34,7 +34,7 @@ class StoreTermRequest extends FormRequest
             $score = $this->has('score') ? $this->integer('score') : 20;
             $min = $this->has('minimum_score') ? $this->integer('minimum_score') : 12;
             if ($score > 0 && $min > $score) {
-                $v->errors()->add('minimum_score', 'minimum_score cannot exceed score.');
+                $v->errors()->add('minimum_score', __('errors.minimum_score_gt_score'));
             }
         });
     }

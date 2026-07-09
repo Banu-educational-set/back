@@ -11,6 +11,7 @@ use App\Models\Ticket;
 use App\Models\TicketMessage;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -46,7 +47,7 @@ class TicketService
         });
     }
 
-    private function attachMedia(Ticket $ticket, array $mediaIds, User $uploader): void
+    private function attachMedia(Model $owner, array $mediaIds, User $uploader): void
     {
         if (empty($mediaIds)) {
             return;
@@ -56,7 +57,7 @@ class TicketService
             $media = Media::findOrFail((int) $id);
             $this->mediaService->attachTo(
                 media: $media,
-                owner: $ticket,
+                owner: $owner,
                 uploader: $uploader,
                 collection: $media->collection_name,
                 singleFile: false,
@@ -169,22 +170,26 @@ class TicketService
         return $out;
     }
 
-    public function postMessage(Ticket $ticket, User $sender, string $message): TicketMessage
+    public function postMessage(Ticket $ticket, User $sender, ?string $message, array $mediaIds = []): TicketMessage
     {
-        $created = TicketMessage::create([
-            'ticket_id' => $ticket->id,
-            'sender_id' => $sender->id,
-            'message' => $message,
-        ]);
-
-        if ($sender->id !== $ticket->student_id && $ticket->status !== TicketStatus::Closed) {
-            $ticket->update([
-                'status' => TicketStatus::Answered->value,
-                'assigned_to_user_id' => $ticket->assigned_to_user_id ?? $sender->id,
+        return DB::transaction(function () use ($ticket, $sender, $message, $mediaIds) {
+            $created = TicketMessage::create([
+                'ticket_id' => $ticket->id,
+                'sender_id' => $sender->id,
+                'message' => $message,
             ]);
-        }
 
-        return $created;
+            $this->attachMedia($created, $mediaIds, $sender);
+
+            if ($sender->id !== $ticket->student_id && $ticket->status !== TicketStatus::Closed) {
+                $ticket->update([
+                    'status' => TicketStatus::Answered->value,
+                    'assigned_to_user_id' => $ticket->assigned_to_user_id ?? $sender->id,
+                ]);
+            }
+
+            return $created->load('media');
+        });
     }
 
     public function updateStatus(Ticket $ticket, User $actor, TicketStatus $status): Ticket

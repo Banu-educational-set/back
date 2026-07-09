@@ -63,19 +63,15 @@ class MediaService
         }
 
         if (! $media->isPending()) {
-            throw new RuntimeException('Media is already attached to a different resource.');
+            throw new RuntimeException(__('errors.media_already_attached'));
         }
 
         if ($media->uploaded_by !== $uploader->id) {
-            throw new RuntimeException('Media does not belong to the current user.');
+            throw new RuntimeException(__('errors.media_not_owned'));
         }
 
         if ($media->collection_name !== $collection) {
-            throw new RuntimeException(sprintf(
-                'Media uploaded for "%s" cannot be attached as "%s".',
-                $media->collection_name,
-                $collection,
-            ));
+            throw new RuntimeException(__('errors.media_purpose_mismatch'));
         }
 
         if ($singleFile) {

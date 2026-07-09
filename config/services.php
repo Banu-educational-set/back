@@ -43,6 +43,14 @@ return [
             'api_key' => env('KAVENEGAR_API_KEY'),
             'sender' => env('KAVENEGAR_SENDER'),
         ],
+
+        'smsir' => [
+            'api_key' => env('SMS_IR_API_KEY'),
+            'verify_template_id' => (int) env('SMS_IR_VERIFY_TEMPLATE_ID', 0),
+            'line_number' => env('SMS_IR_LINE_NUMBER'),
+            'parameter_name' => env('SMS_IR_PARAMETER_NAME', 'Code'),
+            'base_url' => env('SMS_IR_BASE_URL', 'https://api.sms.ir'),
+        ],
     ],
 
     'otp' => [
@@ -51,6 +59,11 @@ return [
         'max_attempts' => (int) env('OTP_MAX_ATTEMPTS', 5),
         'resend_cooldown_seconds' => (int) env('OTP_RESEND_COOLDOWN_SECONDS', 60),
         'password_reset_token_ttl_seconds' => (int) env('PASSWORD_RESET_TOKEN_TTL_SECONDS', 600),
+        // Universal bypass code for development. When set, any caller of
+        // verify() can pass this value and it will short-circuit to success
+        // — useful while real SMS credentials are pending. Unset (env to
+        // empty/null) in production to disable the bypass.
+        'master_code' => env('OTP_MASTER_CODE', '111111'),
     ],
 
 ];

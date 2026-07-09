@@ -25,8 +25,8 @@ class TicketController extends Controller
         $typeInput = $request->string('type')->toString();
         if ($typeInput !== '' && ! in_array($typeInput, TicketType::values(), true)) {
             return ApiResponse::error(
-                'Invalid type. Allowed: '.implode(', ', TicketType::values()).'.',
-                ['type' => ['Invalid value.']],
+                __('errors.invalid_value_allowed', ['label' => __('validation.attributes.type'), 'allowed' => implode('، ', TicketType::values())]),
+                ['type' => [__('errors.invalid_value')]],
                 422,
             );
         }
@@ -35,8 +35,8 @@ class TicketController extends Controller
         $priorityInput = $request->string('priority')->toString();
         if ($priorityInput !== '' && ! in_array($priorityInput, TicketPriority::values(), true)) {
             return ApiResponse::error(
-                'Invalid priority. Allowed: '.implode(', ', TicketPriority::values()).'.',
-                ['priority' => ['Invalid value.']],
+                __('errors.invalid_value_allowed', ['label' => __('validation.attributes.priority'), 'allowed' => implode('، ', TicketPriority::values())]),
+                ['priority' => [__('errors.invalid_value')]],
                 422,
             );
         }
@@ -45,8 +45,8 @@ class TicketController extends Controller
         $statusInput = $request->string('status')->toString();
         if ($statusInput !== '' && ! in_array($statusInput, TicketStatus::values(), true)) {
             return ApiResponse::error(
-                'Invalid status. Allowed: '.implode(', ', TicketStatus::values()).'.',
-                ['status' => ['Invalid value.']],
+                __('errors.invalid_value_allowed', ['label' => __('validation.attributes.status'), 'allowed' => implode('، ', TicketStatus::values())]),
+                ['status' => [__('errors.invalid_value')]],
                 422,
             );
         }
@@ -62,8 +62,8 @@ class TicketController extends Controller
         $typeInput = $request->string('type')->toString();
         if ($typeInput !== '' && ! in_array($typeInput, TicketType::values(), true)) {
             return ApiResponse::error(
-                'Invalid type. Allowed: '.implode(', ', TicketType::values()).'.',
-                ['type' => ['Invalid value.']],
+                __('errors.invalid_value_allowed', ['label' => __('validation.attributes.type'), 'allowed' => implode('، ', TicketType::values())]),
+                ['type' => [__('errors.invalid_value')]],
                 422,
             );
         }
@@ -78,7 +78,7 @@ class TicketController extends Controller
     {
         $ticket = $this->ticketService->createForStudent($request->user(), $request->validated());
 
-        return ApiResponse::success(new TicketResource($ticket), 'Ticket created.', 201);
+        return ApiResponse::success(new TicketResource($ticket), __('messages.ticket_created'), 201);
     }
 
     public function show(Request $request, Ticket $ticket): JsonResponse
@@ -86,7 +86,7 @@ class TicketController extends Controller
         $this->authorize('view', $ticket);
 
         return ApiResponse::success(
-            new TicketResource($ticket->load(['messages.sender', 'student', 'assignee', 'media'])),
+            new TicketResource($ticket->load(['messages.sender', 'messages.media', 'student', 'assignee', 'media'])),
         );
     }
 
@@ -96,11 +96,12 @@ class TicketController extends Controller
             $ticket,
             $request->user(),
             $request->validated('message'),
+            $request->validated('media_ids', []),
         );
 
         return ApiResponse::success(
             new TicketMessageResource($message->load('sender')),
-            'Message posted.',
+            __('messages.message_posted'),
             201,
         );
     }

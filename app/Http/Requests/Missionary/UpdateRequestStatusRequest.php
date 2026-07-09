@@ -19,7 +19,7 @@ class UpdateRequestStatusRequest extends FormRequest
             'status' => [
                 'required',
                 'string',
-                Rule::in(MissionaryRequestStatus::missionaryAssignable()),
+                Rule::in(MissionaryRequestStatus::missionaryTargets()),
             ],
         ];
     }

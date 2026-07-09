@@ -24,6 +24,7 @@ class UpdateSessionRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'type' => ['sometimes', 'string', Rule::in(SessionType::values())],
             'starts_at' => ['nullable', 'date'],
+            'duration_minutes' => ['nullable', 'integer', 'min:1', 'max:100000'],
             'location' => ['nullable', 'string', 'max:255'],
             'link' => ['nullable', 'url', 'max:500'],
             'media_ids' => ['nullable', 'array'],
@@ -49,7 +50,7 @@ class UpdateSessionRequest extends FormRequest
             }
 
             if (in_array($session->id, $prereqIds, true)) {
-                $v->errors()->add('prerequisite_session_ids', 'A session cannot be its own prerequisite.');
+                $v->errors()->add('prerequisite_session_ids', __('errors.session_self_prereq'));
 
                 return;
             }
@@ -63,11 +64,11 @@ class UpdateSessionRequest extends FormRequest
                 ->all();
 
             if ($mismatched !== []) {
-                $v->errors()->add('prerequisite_session_ids', 'Prerequisite sessions must belong to the same course as this session.');
+                $v->errors()->add('prerequisite_session_ids', __('errors.session_prereq_same_course'));
             }
 
             if (app(PrerequisiteService::class)->wouldCreateSessionCycle($session->id, $prereqIds)) {
-                $v->errors()->add('prerequisite_session_ids', 'Assigning these prerequisites would create a cycle.');
+                $v->errors()->add('prerequisite_session_ids', __('errors.session_prereq_cycle'));
             }
         });
     }

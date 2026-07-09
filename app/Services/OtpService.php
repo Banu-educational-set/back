@@ -49,15 +49,32 @@ class OtpService
             'updated_at' => now(),
         ]);
 
-        $this->sms->send($phone, "Your verification code: {$code}");
+        $this->sms->send($phone, "Your verification code: {$code}", $code);
     }
 
     /**
      * Verify the given OTP for the phone+purpose pair. Consumes the latest
      * matching active row on success. Throws ValidationException otherwise.
+     *
+     * Development convenience: when services.otp.master_code is set, any
+     * caller can pass that value as the code and verification is short-
+     * circuited to success. The latest matching row (if any) is consumed
+     * so the bypass leaves the table in the same state a normal success
+     * would. Set OTP_MASTER_CODE to empty in production to disable.
      */
     public function verify(string $phone, string $purpose, string $code): void
     {
+        $masterCode = (string) config('services.otp.master_code', '');
+        if ($masterCode !== '' && hash_equals($masterCode, $code)) {
+            DB::table('otp_codes')
+                ->where('phone', $phone)
+                ->where('purpose', $purpose)
+                ->whereNull('consumed_at')
+                ->update(['consumed_at' => now(), 'updated_at' => now()]);
+
+            return;
+        }
+
         $maxAttempts = (int) config('services.otp.max_attempts', 5);
 
         $row = DB::table('otp_codes')

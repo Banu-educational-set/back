@@ -70,7 +70,7 @@ class HomeworkController extends Controller
             $unmet = $this->prerequisiteService->sessionUnmetPrerequisites($user, $session);
             if ($unmet !== []) {
                 return ApiResponse::error(
-                    'Prerequisites not met for this session.',
+                    __('errors.prereq_session_not_met'),
                     ['prerequisite_session_ids' => $unmet],
                     403,
                 );
@@ -92,14 +92,14 @@ class HomeworkController extends Controller
     {
         $homework = $this->homeworkService->create($request->validated(), $request->user());
 
-        return ApiResponse::success(new HomeworkResource($homework), 'Homework created.', 201);
+        return ApiResponse::success(new HomeworkResource($homework), __('messages.homework_created'), 201);
     }
 
     public function update(UpdateHomeworkRequest $request, Homework $homework): JsonResponse
     {
         $updated = $this->homeworkService->update($homework, $request->validated(), $request->user());
 
-        return ApiResponse::success(new HomeworkResource($updated), 'Homework updated.');
+        return ApiResponse::success(new HomeworkResource($updated), __('messages.homework_updated'));
     }
 
     public function destroy(Homework $homework): JsonResponse
@@ -107,7 +107,7 @@ class HomeworkController extends Controller
         $this->authorize('delete', $homework);
         $this->homeworkService->delete($homework);
 
-        return ApiResponse::success(null, 'Homework deleted.');
+        return ApiResponse::success(null, __('messages.homework_deleted'));
     }
 
     public function submit(SubmitHomeworkRequest $request, Homework $homework): JsonResponse

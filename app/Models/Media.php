@@ -62,7 +62,7 @@ class Media extends Model
                 // for non-public disks.
                 $url = URL::temporarySignedRoute(
                     'storage.'.$this->disk,
-                    now()->addMinutes(60),
+                    now()->addMinutes((int) config('education.media.signed_url_ttl_minutes', 1440)),
                     ['path' => $this->file_path],
                     absolute: false,
                 );

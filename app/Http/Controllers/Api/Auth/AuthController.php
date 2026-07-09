@@ -34,7 +34,7 @@ class AuthController extends Controller
         return ApiResponse::success([
             'user' => (new UserResource($result['user']))->resolve($request),
             'token' => $result['token'],
-        ], 'Registered.', 201);
+        ], __('messages.registered'), 201);
     }
 
     public function login(LoginRequest $request): JsonResponse
@@ -44,21 +44,21 @@ class AuthController extends Controller
         return ApiResponse::success([
             'user' => (new UserResource($result['user']))->resolve($request),
             'token' => $result['token'],
-        ], 'Logged in.');
+        ], __('messages.logged_in'));
     }
 
     public function logout(Request $request): JsonResponse
     {
         $this->authService->logout($request->user());
 
-        return ApiResponse::success(null, 'Logged out.');
+        return ApiResponse::success(null, __('messages.logged_out'));
     }
 
     public function me(Request $request): JsonResponse
     {
         return ApiResponse::success(
             new UserResource($request->user()->load(['roles', 'avatar', 'province', 'city'])),
-            'OK',
+            __('messages.ok'),
         );
     }
 
@@ -84,7 +84,7 @@ class AuthController extends Controller
 
         return ApiResponse::success(
             new UserResource($user->fresh(['roles', 'avatar', 'province', 'city'])),
-            'Profile updated.',
+            __('messages.profile_updated'),
         );
     }
 
@@ -92,7 +92,7 @@ class AuthController extends Controller
     {
         $this->authService->requestLoginOtp($request->validated()['phone']);
 
-        return ApiResponse::success(null, 'If the phone is registered, a code has been sent.');
+        return ApiResponse::success(null, __('messages.otp_sent'));
     }
 
     public function verifyLoginOtp(VerifyLoginOtpRequest $request): JsonResponse
@@ -108,14 +108,14 @@ class AuthController extends Controller
         return ApiResponse::success([
             'user' => (new UserResource($result['user']))->resolve($request),
             'token' => $result['token'],
-        ], 'Logged in.');
+        ], __('messages.logged_in'));
     }
 
     public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
         $this->authService->requestPasswordResetOtp($request->validated()['phone']);
 
-        return ApiResponse::success(null, 'If the phone is registered, a code has been sent.');
+        return ApiResponse::success(null, __('messages.otp_sent'));
     }
 
     public function verifyPasswordResetOtp(VerifyPasswordResetOtpRequest $request): JsonResponse
@@ -124,7 +124,7 @@ class AuthController extends Controller
 
         $token = $this->authService->verifyPasswordResetOtp($data['phone'], $data['code']);
 
-        return ApiResponse::success(['reset_token' => $token], 'OTP verified. Use this token to set a new password.');
+        return ApiResponse::success(['reset_token' => $token], __('messages.otp_verified'));
     }
 
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
@@ -133,6 +133,6 @@ class AuthController extends Controller
 
         $this->authService->resetPassword($data['phone'], $data['token'], $data['password']);
 
-        return ApiResponse::success(null, 'Password updated.');
+        return ApiResponse::success(null, __('messages.password_updated'));
     }
 }

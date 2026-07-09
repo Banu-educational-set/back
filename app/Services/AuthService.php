@@ -59,11 +59,11 @@ class AuthService
         $user = User::where('phone', $credentials['phone'])->first();
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
-            throw new AuthenticationException('Invalid credentials.');
+            throw new AuthenticationException(__('errors.invalid_credentials'));
         }
 
         if ($user->status === UserStatus::Blocked) {
-            throw new AuthenticationException('Your account has been blocked.');
+            throw new AuthenticationException(__('errors.account_blocked'));
         }
 
         $token = $user->createToken($credentials['device_name'] ?? 'api')->plainTextToken;
@@ -107,11 +107,11 @@ class AuthService
         $user = User::where('phone', $phone)->first();
 
         if (! $user) {
-            throw new AuthenticationException('Invalid credentials.');
+            throw new AuthenticationException(__('errors.invalid_credentials'));
         }
 
         if ($user->status === UserStatus::Blocked) {
-            throw new AuthenticationException('Your account has been blocked.');
+            throw new AuthenticationException(__('errors.account_blocked'));
         }
 
         // First successful OTP verification confirms the user's phone, so

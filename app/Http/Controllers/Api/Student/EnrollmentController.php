@@ -21,8 +21,8 @@ class EnrollmentController extends Controller
         $status = $request->input('status');
         if ($status !== null && ! in_array($status, EnrollmentStatus::values(), true)) {
             return ApiResponse::error(
-                'Invalid status. Allowed: '.implode(', ', EnrollmentStatus::values()).'.',
-                ['status' => ['Invalid value.']],
+                __('errors.invalid_value_allowed', ['label' => __('validation.attributes.status'), 'allowed' => implode('، ', EnrollmentStatus::values())]),
+                ['status' => [__('errors.invalid_value')]],
                 422,
             );
         }
@@ -41,7 +41,13 @@ class EnrollmentController extends Controller
     public function showTerm(Request $request, Term $term): JsonResponse
     {
         $enrollment = TermEnrollment::query()
-            ->with(['term' => fn ($q) => $q->withCount(['courses', 'enrollments'])])
+            ->with(['term' => fn ($q) => $q
+                ->withCount(['courses', 'enrollments', 'termSessions as sessions_count'])
+                ->withCount([
+                    'termSessions as exams_count' => fn ($qq) => $qq->join('exams', 'exams.session_id', '=', 'course_sessions.id')->select(\Illuminate\Support\Facades\DB::raw('count(distinct exams.id)')),
+                    'termSessions as homeworks_count' => fn ($qq) => $qq->join('homeworks', 'homeworks.session_id', '=', 'course_sessions.id')->select(\Illuminate\Support\Facades\DB::raw('count(distinct homeworks.id)')),
+                ])
+            ])
             ->where('user_id', $request->user()->id)
             ->where('term_id', $term->id)
             ->firstOrFail();

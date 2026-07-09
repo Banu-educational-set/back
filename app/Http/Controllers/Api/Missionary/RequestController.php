@@ -29,7 +29,7 @@ class RequestController extends Controller
     {
         if ($missionaryRequest->missionary_id !== null
             && $missionaryRequest->missionary_id !== $request->user()->id) {
-            return ApiResponse::error('Forbidden.', null, 403);
+            return ApiResponse::error(__('errors.forbidden'), null, 403);
         }
 
         return ApiResponse::success(new MissionaryRequestResource($missionaryRequest));
@@ -47,6 +47,6 @@ class RequestController extends Controller
             return ApiResponse::error($e->getMessage(), null, 403);
         }
 
-        return ApiResponse::success(new MissionaryRequestResource($updated), 'Status updated.');
+        return ApiResponse::success(new MissionaryRequestResource($updated), __('messages.status_updated'));
     }
 }

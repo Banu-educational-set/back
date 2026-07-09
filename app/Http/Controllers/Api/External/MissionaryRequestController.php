@@ -19,7 +19,7 @@ class MissionaryRequestController extends Controller
 
         return ApiResponse::success(
             new MissionaryRequestResource($created),
-            'Missionary request received.',
+            __('messages.missionary_request_received'),
             201,
         );
     }

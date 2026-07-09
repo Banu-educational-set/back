@@ -11,11 +11,11 @@ use Illuminate\Pagination\AbstractPaginator;
 
 class ApiResponse
 {
-    public static function success(mixed $data = null, string $message = 'OK', int $status = 200): JsonResponse
+    public static function success(mixed $data = null, ?string $message = null, int $status = 200): JsonResponse
     {
         return response()->json([
             'success' => true,
-            'message' => $message,
+            'message' => $message ?? __('messages.ok'),
             'data' => self::unwrap($data, app(Request::class)),
         ], $status);
     }
