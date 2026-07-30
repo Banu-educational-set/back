@@ -14,11 +14,18 @@ class MissionaryMemoryService
 {
     public function __construct(private readonly MediaService $mediaService) {}
 
-    public function listForMissionary(User $missionary, int $perPage = 20): LengthAwarePaginator
+    /**
+     * @param  array<string, mixed>  $filters  title, missionary_request_id, from_date, to_date
+     */
+    public function listForMissionary(User $missionary, int $perPage = 20, array $filters = []): LengthAwarePaginator
     {
         return MissionaryMemory::query()
             ->with(['media', 'missionaryRequest'])
             ->where('missionary_id', $missionary->id)
+            ->when($filters['title'] ?? null, fn ($q, $v) => $q->where('title', 'like', "%{$v}%"))
+            ->when($filters['missionary_request_id'] ?? null, fn ($q, $v) => $q->where('missionary_request_id', $v))
+            ->when($filters['from_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '>=', $v))
+            ->when($filters['to_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '<=', $v))
             ->orderByDesc('id')
             ->paginate($perPage);
     }

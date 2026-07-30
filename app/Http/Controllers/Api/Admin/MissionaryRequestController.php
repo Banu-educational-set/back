@@ -19,7 +19,10 @@ class MissionaryRequestController extends Controller
     {
         return ApiResponse::success(
             MissionaryRequestResource::collection(
-                $this->service->listAll((int) $request->integer('per_page', 20)),
+                $this->service->listAll(
+                    (int) $request->integer('per_page', 20),
+                    $request->only(['status', 'requester_name', 'title', 'subject', 'missionary_id', 'from_date', 'to_date']),
+                ),
             ),
         );
     }

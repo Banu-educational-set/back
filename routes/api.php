@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\Counselor\DashboardController as CounselorDashboardController;
 use App\Http\Controllers\Api\Missionary\DashboardController as MissionaryDashboardController;
 use App\Http\Controllers\Api\Missionary\MemoryController as MissionaryMemoryController;
+use App\Http\Controllers\Api\Missionary\PassedController as MissionaryPassedController;
 use App\Http\Controllers\Api\Missionary\RequestController as MissionaryRequestController;
 use App\Http\Controllers\Api\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Api\RegisterDataController;
@@ -192,6 +193,13 @@ Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Admin->value])
         Route::get('homeworks', [HomeworkController::class, 'index']);
         Route::get('exams', [ExamController::class, 'index']);
 
+        // Admin-prefixed list aliases (same controllers as the unprefixed routes)
+        // so the frontend's /admin/* list URLs resolve with all filter params.
+        Route::get('terms', [TermController::class, 'index']);
+        Route::get('courses', [CourseController::class, 'index']);
+        Route::get('sessions', [CourseSessionController::class, 'index']);
+        Route::get('assignments', [HomeworkController::class, 'index']);
+
         Route::get('terms/{term}/enrollees', [AdminEnrollmentController::class, 'index']);
         Route::post('terms/{term}/enrollees', [AdminEnrollmentController::class, 'store']);
 
@@ -236,6 +244,12 @@ Route::middleware(['auth:sanctum', 'approved', 'role:'.RoleName::Missionary->val
     ->prefix('missionary')
     ->group(function () {
         Route::get('dashboard', [MissionaryDashboardController::class, 'index']);
+
+        // Passed content — same shapes as the student term/course/session views,
+        // scoped to the missionary's completed (passed) terms.
+        Route::get('passed-terms', [MissionaryPassedController::class, 'terms']);
+        Route::get('passed-courses', [MissionaryPassedController::class, 'courses']);
+        Route::get('passed-sessions', [MissionaryPassedController::class, 'sessions']);
 
         Route::get('requests', [MissionaryRequestController::class, 'index']);
         Route::get('requests/{missionaryRequest}', [MissionaryRequestController::class, 'show']);

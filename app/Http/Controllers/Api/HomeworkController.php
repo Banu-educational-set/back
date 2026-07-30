@@ -38,6 +38,7 @@ class HomeworkController extends Controller
             courseId: $request->filled('course_id') ? (int) $request->input('course_id') : null,
             termId: $request->filled('term_id') ? (int) $request->input('term_id') : null,
             perPage: (int) $request->integer('per_page', 20),
+            filters: $request->only(['title', 'from_date', 'to_date']),
         );
 
         return ApiResponse::success(HomeworkResource::collection($homeworks));

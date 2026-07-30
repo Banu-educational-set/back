@@ -55,6 +55,7 @@ class UserController extends Controller
             search: $request->string('search')->toString() ?: null,
             roles: $roles,
             perPage: (int) $request->integer('per_page', 20),
+            filters: $request->only(['name', 'national_code', 'phone', 'role', 'status', 'from_date', 'to_date']),
         );
 
         return ApiResponse::success(UserResource::collection($users));

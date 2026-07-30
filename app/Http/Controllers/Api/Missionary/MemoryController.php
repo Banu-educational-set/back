@@ -23,6 +23,7 @@ class MemoryController extends Controller
                 $this->service->listForMissionary(
                     $request->user(),
                     (int) $request->integer('per_page', 20),
+                    $request->only(['title', 'missionary_request_id', 'from_date', 'to_date']),
                 ),
             ),
         );

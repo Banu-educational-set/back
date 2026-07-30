@@ -11,7 +11,10 @@ use RuntimeException;
 
 class ExamManagementService
 {
-    public function paginate(?int $sessionId, ?int $courseId, ?int $termId, int $perPage = 20): LengthAwarePaginator
+    /**
+     * @param  array<string, mixed>  $filters  title, from_date, to_date
+     */
+    public function paginate(?int $sessionId, ?int $courseId, ?int $termId, int $perPage = 20, array $filters = []): LengthAwarePaginator
     {
         return Exam::query()
             ->with('session.course.term')
@@ -20,6 +23,9 @@ class ExamManagementService
             ->when($sessionId, fn ($q, $id) => $q->where('session_id', $id))
             ->when($courseId, fn ($q, $id) => $q->whereHas('session', fn ($s) => $s->where('course_id', $id)))
             ->when($termId, fn ($q, $id) => $q->whereHas('session.course', fn ($c) => $c->where('term_id', $id)))
+            ->when($filters['title'] ?? null, fn ($q, $v) => $q->where('title', 'like', "%{$v}%"))
+            ->when($filters['from_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '>=', $v))
+            ->when($filters['to_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '<=', $v))
             ->orderByDesc('id')
             ->paginate($perPage);
     }

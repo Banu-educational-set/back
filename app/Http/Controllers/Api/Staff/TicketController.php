@@ -54,7 +54,14 @@ class TicketController extends Controller
 
         return ApiResponse::success(
             TicketResource::collection(
-                $this->ticketService->listForStaff($request->user(), $type, $priority, $status),
+                $this->ticketService->listForStaff(
+                    $request->user(),
+                    $type,
+                    $priority,
+                    $status,
+                    (int) $request->integer('per_page', 20),
+                    $request->only(['user_name', 'from_date', 'to_date']),
+                ),
             ),
         );
     }
@@ -72,7 +79,11 @@ class TicketController extends Controller
         $type = $typeInput !== '' ? TicketType::from($typeInput) : null;
 
         return ApiResponse::success(
-            $this->ticketService->statsForStaff($request->user(), $type),
+            $this->ticketService->statsForStaff(
+                $request->user(),
+                $type,
+                $request->only(['user_name', 'from_date', 'to_date']),
+            ),
         );
     }
 

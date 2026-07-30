@@ -27,6 +27,7 @@ class CourseController extends Controller
             viewer: $request->user(),
             termId: $request->filled('term_id') ? (int) $request->input('term_id') : null,
             perPage: (int) $request->integer('per_page', 20),
+            filters: $request->only(['title', 'status', 'from_date', 'to_date']),
         );
 
         return ApiResponse::success(CourseResource::collection($courses));

@@ -28,28 +28,54 @@ class MissionaryRequestService
         ]);
     }
 
-    public function listForMissionary(User $missionary): LengthAwarePaginator
+    /**
+     * @param  array<string, mixed>  $filters  status, requester_name, title, subject, from_date, to_date
+     */
+    public function listForMissionary(User $missionary, int $perPage = 20, array $filters = []): LengthAwarePaginator
     {
         // Missionaries see requests assigned to them plus unassigned ones
         // (which they implicitly claim by being the first to update status).
-        return MissionaryRequest::query()
+        $query = MissionaryRequest::query()
             ->where(function ($q) use ($missionary) {
                 $q->where('missionary_id', $missionary->id)
                   ->orWhereNull('missionary_id');
-            })
-            ->orderByDesc('id')
-            ->paginate(20);
+            });
+
+        $this->applyRequestFilters($query, $filters);
+
+        return $query->orderByDesc('id')->paginate($perPage);
+    }
+
+    /**
+     * Apply the shared missionary-request list filters.
+     *
+     * @param  array<string, mixed>  $filters
+     */
+    private function applyRequestFilters(\Illuminate\Database\Eloquent\Builder $query, array $filters): void
+    {
+        $query
+            ->when($filters['status'] ?? null, fn ($q, $v) => $q->where('status', $v))
+            ->when($filters['requester_name'] ?? null, fn ($q, $v) => $q->where('requester_name', 'like', "%{$v}%"))
+            ->when($filters['title'] ?? null, fn ($q, $v) => $q->where('title', 'like', "%{$v}%"))
+            ->when($filters['subject'] ?? null, fn ($q, $v) => $q->where('subject', 'like', "%{$v}%"))
+            ->when($filters['missionary_id'] ?? null, fn ($q, $v) => $q->where('missionary_id', $v))
+            ->when($filters['from_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '>=', $v))
+            ->when($filters['to_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '<=', $v));
     }
 
     /**
      * Admins see every request regardless of assignment.
      */
-    public function listAll(int $perPage = 20): LengthAwarePaginator
+    /**
+     * @param  array<string, mixed>  $filters  status, requester_name, title, subject, missionary_id, from_date, to_date
+     */
+    public function listAll(int $perPage = 20, array $filters = []): LengthAwarePaginator
     {
-        return MissionaryRequest::query()
-            ->with('missionary')
-            ->orderByDesc('id')
-            ->paginate($perPage);
+        $query = MissionaryRequest::query()->with('missionary');
+
+        $this->applyRequestFilters($query, $filters);
+
+        return $query->orderByDesc('id')->paginate($perPage);
     }
 
     public function updateStatus(User $missionary, MissionaryRequest $request, string $status): MissionaryRequest

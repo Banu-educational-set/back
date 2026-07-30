@@ -22,6 +22,7 @@ class TermController extends Controller
         $terms = $this->termService->paginate(
             activeOnly: $request->boolean('active_only') ?: null,
             perPage: (int) $request->integer('per_page', 20),
+            filters: $request->only(['title', 'status', 'from_date', 'to_date']),
         );
 
         return ApiResponse::success(TermResource::collection($terms));

@@ -14,7 +14,10 @@ class CourseSessionService
 {
     public function __construct(private readonly MediaService $mediaService) {}
 
-    public function paginate(?User $viewer, ?int $courseId, int $perPage = 20): LengthAwarePaginator
+    /**
+     * @param  array<string, mixed>  $filters  title, session_type (→ type column), from_date, to_date
+     */
+    public function paginate(?User $viewer, ?int $courseId, int $perPage = 20, array $filters = []): LengthAwarePaginator
     {
         $paginator = CourseSession::query()
             ->with('course.term')
@@ -26,6 +29,10 @@ class CourseSessionService
                     ->where('is_active', true)
                     ->whereHas('term', fn ($t) => $t->openNow()))
             )
+            ->when($filters['title'] ?? null, fn ($q, $v) => $q->where('title', 'like', "%{$v}%"))
+            ->when($filters['session_type'] ?? null, fn ($q, $v) => $q->where('type', $v))
+            ->when($filters['from_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '>=', $v))
+            ->when($filters['to_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '<=', $v))
             ->orderByDesc('id')
             ->paginate($perPage);
 

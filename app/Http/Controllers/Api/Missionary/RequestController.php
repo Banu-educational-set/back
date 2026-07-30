@@ -20,7 +20,11 @@ class RequestController extends Controller
     {
         return ApiResponse::success(
             MissionaryRequestResource::collection(
-                $this->service->listForMissionary($request->user()),
+                $this->service->listForMissionary(
+                    $request->user(),
+                    (int) $request->integer('per_page', 20),
+                    $request->only(['status', 'requester_name', 'title', 'subject', 'from_date', 'to_date']),
+                ),
             ),
         );
     }

@@ -13,7 +13,10 @@ class TermService
 {
     public function __construct(private readonly MediaService $mediaService) {}
 
-    public function paginate(?bool $activeOnly, int $perPage = 20): LengthAwarePaginator
+    /**
+     * @param  array<string, mixed>  $filters  title, status (1|0 → is_active), from_date, to_date
+     */
+    public function paginate(?bool $activeOnly, int $perPage = 20, array $filters = []): LengthAwarePaginator
     {
         return Term::query()
             ->with('cover')
@@ -23,6 +26,11 @@ class TermService
                 'termSessions as homeworks_count' => fn ($q) => $q->join('homeworks', 'homeworks.session_id', '=', 'course_sessions.id')->select(DB::raw('count(distinct homeworks.id)')),
             ])
             ->when($activeOnly, fn ($q) => $q->where('is_active', true))
+            ->when($filters['title'] ?? null, fn ($q, $v) => $q->where('title', 'like', "%{$v}%"))
+            ->when(isset($filters['status']) && $filters['status'] !== '' && $filters['status'] !== null,
+                fn ($q) => $q->where('is_active', (bool) (int) $filters['status']))
+            ->when($filters['from_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '>=', $v))
+            ->when($filters['to_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '<=', $v))
             ->orderByDesc('id')
             ->paginate($perPage);
     }

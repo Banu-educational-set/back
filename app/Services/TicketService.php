@@ -82,7 +82,10 @@ class TicketService
      * optional $type lets admins narrow by a specific type; for counselors
      * the type is locked to `advise` regardless of the input.
      */
-    public function listForStaff(User $staff, ?TicketType $type = null, ?TicketPriority $priority = null, ?TicketStatus $status = null): LengthAwarePaginator
+    /**
+     * @param  array<string, mixed>  $filters  user_name, from_date, to_date
+     */
+    public function listForStaff(User $staff, ?TicketType $type = null, ?TicketPriority $priority = null, ?TicketStatus $status = null, int $perPage = 20, array $filters = []): LengthAwarePaginator
     {
         $isAdmin = $staff->hasRole(RoleName::Admin->value);
         $isCounselor = $staff->hasRole(RoleName::Counselor->value);
@@ -107,7 +110,22 @@ class TicketService
             $query->where('status', $status->value);
         }
 
-        return $query->orderByDesc('id')->paginate(20);
+        $this->applyTicketFilters($query, $filters);
+
+        return $query->orderByDesc('id')->paginate($perPage);
+    }
+
+    /**
+     * Apply the shared owner-name / creation-date filters to a ticket query.
+     *
+     * @param  array<string, mixed>  $filters
+     */
+    private function applyTicketFilters(\Illuminate\Database\Eloquent\Builder $query, array $filters): void
+    {
+        $query
+            ->when($filters['user_name'] ?? null, fn ($q, $v) => $q->whereHas('student', fn ($s) => $s->where('name', 'like', "%{$v}%")))
+            ->when($filters['from_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '>=', $v))
+            ->when($filters['to_date'] ?? null, fn ($q, $v) => $q->whereDate('created_at', '<=', $v));
     }
 
     /**
@@ -130,7 +148,10 @@ class TicketService
      *
      * @return array<string, int>
      */
-    public function statsForStaff(User $staff, ?TicketType $type = null): array
+    /**
+     * @param  array<string, mixed>  $filters  user_name, from_date, to_date
+     */
+    public function statsForStaff(User $staff, ?TicketType $type = null, array $filters = []): array
     {
         $isAdmin = $staff->hasRole(RoleName::Admin->value);
         $isCounselor = $staff->hasRole(RoleName::Counselor->value);
@@ -146,6 +167,8 @@ class TicketService
         } else {
             $query->whereRaw('1 = 0');
         }
+
+        $this->applyTicketFilters($query, $filters);
 
         return $this->statsFor($query);
     }

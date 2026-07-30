@@ -27,6 +27,7 @@ class CourseSessionController extends Controller
             viewer: $request->user(),
             courseId: $request->integer('course_id') ?: null,
             perPage: (int) $request->integer('per_page', 20),
+            filters: $request->only(['title', 'session_type', 'from_date', 'to_date']),
         );
 
         return ApiResponse::success(CourseSessionResource::collection($sessions));
