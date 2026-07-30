@@ -11,6 +11,7 @@ return [
     'endpoint_not_found' => 'آدرس موردنظر یافت نشد.',
     'method_not_allowed' => 'این متد مجاز نیست.',
     'request_failed' => 'درخواست ناموفق بود.',
+    'internal_server_error' => 'خطایی در سرور رخ داده است. لطفاً دوباره تلاش کنید.',
     'invalid_api_key' => 'کلید API خارجی نامعتبر است.',
 
     // Account status (EnsureUserApproved middleware)
@@ -22,11 +23,18 @@ return [
 
     // Auth
     'invalid_credentials' => 'اطلاعات ورود نامعتبر است.',
+    'account_not_found' => 'حساب کاربری یافت نشد.',
+    'invalid_reset_token' => 'توکن بازنشانی رمز عبور نامعتبر است یا منقضی شده است.',
+    'otp_resend_cooldown' => 'برای دریافت کد جدید کمی صبر کنید.',
+    'otp_expired' => 'کد تأیید منقضی شده است.',
+    'otp_too_many_attempts' => 'تعداد تلاش‌ها بیش از حد مجاز است. یک کد جدید درخواست کنید.',
+    'otp_invalid_or_expired' => 'کد تأیید نامعتبر است یا منقضی شده است.',
 
     // Media
     'file_missing' => 'فایل روی سرور موجود نیست.',
     'media_not_owned' => 'این فایل متعلق به کاربر فعلی نیست.',
     'media_already_attached' => 'این فایل قبلاً به منبع دیگری متصل شده است.',
+    'unknown_media_purpose' => 'هدف بارگذاری فایل «:purpose» نامعتبر است.',
     'file_exceeds' => 'حجم فایل نباید از :max کیلوبایت بیشتر باشد.',
     'file_ext_allowed' => 'پسوند فایل باید یکی از موارد زیر باشد: :values.',
 
@@ -35,6 +43,10 @@ return [
     'term_not_open_enrollment' => 'این ترم در حال حاضر برای ثبت‌نام باز نیست.',
     'already_enrolled' => 'شما قبلاً در این ترم ثبت‌نام کرده‌اید.',
     'user_must_be_student_or_missionary' => 'کاربر باید نقش دانشجو یا مبلّغ داشته باشد.',
+
+    // Homework submissions
+    'homework_deadline_passed' => 'مهلت ارسال این تکلیف به پایان رسیده است.',
+    'homework_already_accepted' => 'این تکلیف قبلاً پذیرفته شده است.',
 
     // Exams
     'exam_no_questions' => 'این آزمون هیچ سؤالی ندارد.',

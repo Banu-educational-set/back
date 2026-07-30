@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\EnsureUserApproved;
+use App\Http\Middleware\VerifyExternalApiKey;
 use App\Support\ApiResponse;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -9,6 +11,9 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -24,11 +29,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
 
         $middleware->alias([
-            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-            'external.api_key' => \App\Http\Middleware\VerifyExternalApiKey::class,
-            'approved' => \App\Http\Middleware\EnsureUserApproved::class,
+            'role' => RoleMiddleware::class,
+            'permission' => PermissionMiddleware::class,
+            'role_or_permission' => RoleOrPermissionMiddleware::class,
+            'external.api_key' => VerifyExternalApiKey::class,
+            'approved' => EnsureUserApproved::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -78,6 +83,16 @@ return Application::configure(basePath: dirname(__DIR__))
                 };
 
                 return ApiResponse::error($msg, null, $status);
+            }
+        });
+
+        // Never expose framework, database, or runtime exception text through
+        // the API. Those messages are frequently English and may contain
+        // implementation details; the original exception is still reported by
+        // Laravel while clients receive a stable localized response.
+        $exceptions->render(function (Throwable $e, Request $r) use ($isApi) {
+            if ($isApi($r)) {
+                return ApiResponse::error(__('errors.internal_server_error'), null, 500);
             }
         });
     })->create();

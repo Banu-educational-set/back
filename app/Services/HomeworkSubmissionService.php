@@ -23,7 +23,7 @@ class HomeworkSubmissionService
     {
         $deadline = $homework->effectiveDeadline();
         if ($deadline && now()->gt($deadline)) {
-            throw new \RuntimeException('The deadline for this homework has passed.');
+            throw new \RuntimeException(__('errors.homework_deadline_passed'));
         }
 
         return DB::transaction(function () use ($user, $homework, $mediaId) {
@@ -33,7 +33,7 @@ class HomeworkSubmissionService
                 ->first();
 
             if ($existing && $existing->status === HomeworkSubmissionStatus::Accepted) {
-                throw new \RuntimeException('This homework has already been accepted.');
+                throw new \RuntimeException(__('errors.homework_already_accepted'));
             }
 
             $submission = HomeworkSubmission::updateOrCreate(

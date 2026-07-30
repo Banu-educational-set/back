@@ -125,7 +125,7 @@ class HomeworkController extends Controller
 
         return ApiResponse::success(
             new HomeworkSubmissionResource($submission->load('media')),
-            'Homework submitted.',
+            __('messages.homework_submitted'),
             201,
         );
     }
@@ -143,7 +143,7 @@ class HomeworkController extends Controller
 
         return ApiResponse::success(
             new HomeworkSubmissionResource($reviewed->load('media')),
-            'Submission reviewed.',
+            __('messages.submission_reviewed'),
         );
     }
 }

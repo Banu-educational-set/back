@@ -3,12 +3,16 @@
 namespace App\Services;
 
 use App\Enums\UserStatus;
+use App\Models\Media;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class UserService
 {
+    public function __construct(private readonly MediaService $mediaService) {}
+
     /**
      * @param  array<int, string>|null  $roles
      * @param  array<string, mixed>  $filters  name, national_code, phone, role, status, from_date, to_date
@@ -34,41 +38,68 @@ class UserService
             ->paginate($perPage);
     }
 
-    public function create(array $data): User
+    public function create(array $data, ?User $uploader = null): User
     {
-        $user = User::create(array_merge(
-            Arr::only($data, [
-                'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
-                'marriage_status', 'birthday', 'gender', 'address', 'bio',
-            ]),
-            // Admin-created users skip the verification flow and start approved.
-            ['status' => $data['status'] ?? UserStatus::Approved->value],
-        ));
+        $avatarMediaId = Arr::pull($data, 'avatar_media_id');
 
-        if (! empty($data['roles'])) {
-            $user->syncRoles($data['roles']);
-        }
+        return DB::transaction(function () use ($data, $avatarMediaId, $uploader) {
+            $user = User::create(array_merge(
+                Arr::only($data, [
+                    'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
+                    'marriage_status', 'birthday', 'gender', 'address', 'bio',
+                ]),
+                // Admin-created users skip the verification flow and start approved.
+                ['status' => $data['status'] ?? UserStatus::Approved->value],
+            ));
 
-        return $user->load(['roles', 'province', 'city']);
+            if (! empty($data['roles'])) {
+                $user->syncRoles($data['roles']);
+            }
+
+            $this->attachAvatar($user, $avatarMediaId, $uploader);
+
+            return $user->load(['roles', 'avatar', 'province', 'city']);
+        });
     }
 
-    public function update(User $user, array $data): User
+    public function update(User $user, array $data, ?User $uploader = null): User
     {
-        $user->fill(Arr::only($data, [
-            'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
-            'marriage_status', 'birthday', 'gender', 'address', 'bio',
-        ]))->save();
+        $avatarMediaId = Arr::pull($data, 'avatar_media_id');
 
-        if (array_key_exists('roles', $data)) {
-            $user->syncRoles($data['roles']);
-        }
+        return DB::transaction(function () use ($user, $data, $avatarMediaId, $uploader) {
+            $user->fill(Arr::only($data, [
+                'name', 'email', 'phone', 'national_code', 'password', 'province_id', 'city_id',
+                'marriage_status', 'birthday', 'gender', 'address', 'bio',
+            ]))->save();
 
-        return $user->load(['roles', 'province', 'city']);
+            if (array_key_exists('roles', $data)) {
+                $user->syncRoles($data['roles']);
+            }
+
+            $this->attachAvatar($user, $avatarMediaId, $uploader);
+
+            return $user->load(['roles', 'avatar', 'province', 'city']);
+        });
     }
 
     public function delete(User $user): void
     {
         $user->tokens()->delete();
         $user->delete();
+    }
+
+    private function attachAvatar(User $user, ?int $mediaId, ?User $uploader): void
+    {
+        if ($mediaId === null || $uploader === null) {
+            return;
+        }
+
+        $this->mediaService->attachTo(
+            media: Media::findOrFail($mediaId),
+            owner: $user,
+            uploader: $uploader,
+            collection: 'avatar',
+            singleFile: true,
+        );
     }
 }

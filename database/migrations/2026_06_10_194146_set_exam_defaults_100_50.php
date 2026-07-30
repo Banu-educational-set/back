@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -9,13 +10,17 @@ return new class extends Migration
     {
         // Exams are scored out of 100 by convention. Bump column defaults
         // from the earlier 20/12 (Persian school-style) to 100/50 for new rows.
-        DB::statement('ALTER TABLE exams ALTER COLUMN score SET DEFAULT 100');
-        DB::statement('ALTER TABLE exams ALTER COLUMN minimum_score SET DEFAULT 50');
+        Schema::table('exams', function (Blueprint $table) {
+            $table->unsignedInteger('score')->default(100)->change();
+            $table->unsignedInteger('minimum_score')->default(50)->change();
+        });
     }
 
     public function down(): void
     {
-        DB::statement('ALTER TABLE exams ALTER COLUMN score SET DEFAULT 20');
-        DB::statement('ALTER TABLE exams ALTER COLUMN minimum_score SET DEFAULT 12');
+        Schema::table('exams', function (Blueprint $table) {
+            $table->unsignedInteger('score')->default(20)->change();
+            $table->unsignedInteger('minimum_score')->default(12)->change();
+        });
     }
 };

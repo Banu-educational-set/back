@@ -6,6 +6,7 @@ use App\Enums\Gender;
 use App\Enums\MarriageStatus;
 use App\Enums\RoleName;
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -39,6 +40,15 @@ class UpdateUserRequest extends FormRequest
             'gender' => ['sometimes', 'nullable', 'string', Rule::in(Gender::values())],
             'address' => ['sometimes', 'nullable', 'string', 'max:1000'],
             'bio' => ['sometimes', 'nullable', 'string', 'max:2000'],
+            'avatar_media_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('media', 'id')->where(fn ($query) => $query
+                    ->where('collection_name', 'avatar')
+                    ->where('uploaded_by', $this->user()?->id)
+                    ->whereNull('model_id')),
+            ],
         ];
     }
 
@@ -49,7 +59,7 @@ class UpdateUserRequest extends FormRequest
                 return;
             }
 
-            /** @var \App\Models\User|null $target */
+            /** @var User|null $target */
             $target = $this->route('user');
 
             $provinceId = $this->has('province_id')

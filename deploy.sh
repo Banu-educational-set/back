@@ -16,12 +16,14 @@ rsync -avz --delete \
   --exclude='node_modules' \
   --exclude='.git' \
   --exclude='.env' \
+  --exclude='.phpunit.result.cache' \
   --exclude='public/storage' \
   --exclude='storage/app/public/**' \
   --exclude='storage/app/private/**' \
   --exclude='storage/logs/*' \
   --exclude='storage/framework/cache/*' \
   --exclude='storage/framework/sessions/*' \
+  --exclude='storage/framework/testing/**' \
   --exclude='storage/framework/views/*' \
   --exclude='bootstrap/cache/*.php' \
   --exclude='deploy.sh' \

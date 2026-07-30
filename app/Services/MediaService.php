@@ -128,7 +128,7 @@ class MediaService
         $config = config("education.media.purposes.{$purpose}");
 
         if (! is_array($config)) {
-            throw new RuntimeException("Unknown media purpose: {$purpose}");
+            throw new RuntimeException(__('errors.unknown_media_purpose', ['purpose' => $purpose]));
         }
 
         return $config;

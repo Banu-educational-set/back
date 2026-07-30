@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Enums\RoleName;
-use App\Http\Controllers\Controller;
 use App\Enums\UserStatus;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AssignRoleRequest;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
@@ -70,14 +70,14 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request): JsonResponse
     {
-        $user = $this->userService->create($request->validated());
+        $user = $this->userService->create($request->validated(), $request->user());
 
         return ApiResponse::success(new UserResource($user), __('messages.user_created'), 201);
     }
 
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
-        $updated = $this->userService->update($user, $request->validated());
+        $updated = $this->userService->update($user, $request->validated(), $request->user());
 
         return ApiResponse::success(new UserResource($updated), __('messages.user_updated'));
     }

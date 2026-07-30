@@ -10,6 +10,7 @@ use Illuminate\Validation\ValidationException;
 class OtpService
 {
     public const PURPOSE_LOGIN = 'login';
+
     public const PURPOSE_PASSWORD_RESET = 'password_reset';
 
     public function __construct(private readonly SmsService $sms) {}
@@ -31,7 +32,7 @@ class OtpService
 
         if ($latest && Carbon::parse($latest->created_at)->addSeconds($cooldown)->isFuture()) {
             throw ValidationException::withMessages([
-                'phone' => ['Please wait before requesting another code.'],
+                'phone' => [__('errors.otp_resend_cooldown')],
             ]);
         }
 
@@ -49,7 +50,7 @@ class OtpService
             'updated_at' => now(),
         ]);
 
-        $this->sms->send($phone, "Your verification code: {$code}", $code);
+        $this->sms->send($phone, __('messages.verification_code', ['code' => $code]), $code);
     }
 
     /**
@@ -89,7 +90,7 @@ class OtpService
         }
 
         if (Carbon::parse($row->expires_at)->isPast()) {
-            $this->failVerification('Code has expired.');
+            $this->failVerification(__('errors.otp_expired'));
         }
 
         if ($row->attempts >= $maxAttempts) {
@@ -97,7 +98,7 @@ class OtpService
                 'consumed_at' => now(),
                 'updated_at' => now(),
             ]);
-            $this->failVerification('Too many attempts. Request a new code.');
+            $this->failVerification(__('errors.otp_too_many_attempts'));
         }
 
         if (! Hash::check($code, $row->code_hash)) {
@@ -122,8 +123,10 @@ class OtpService
         return str_pad((string) random_int(0, $max), $length, '0', STR_PAD_LEFT);
     }
 
-    private function failVerification(string $message = 'Invalid or expired code.'): never
+    private function failVerification(?string $message = null): never
     {
-        throw ValidationException::withMessages(['code' => [$message]]);
+        throw ValidationException::withMessages([
+            'code' => [$message ?? __('errors.otp_invalid_or_expired')],
+        ]);
     }
 }

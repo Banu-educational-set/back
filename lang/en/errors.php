@@ -11,6 +11,7 @@ return [
     'endpoint_not_found' => 'Endpoint not found.',
     'method_not_allowed' => 'Method not allowed.',
     'request_failed' => 'Request failed.',
+    'internal_server_error' => 'An internal server error occurred. Please try again.',
     'invalid_api_key' => 'Invalid external API key.',
 
     // Account status (EnsureUserApproved middleware)
@@ -22,11 +23,18 @@ return [
 
     // Auth
     'invalid_credentials' => 'Invalid credentials.',
+    'account_not_found' => 'Account not found.',
+    'invalid_reset_token' => 'Invalid or expired password reset token.',
+    'otp_resend_cooldown' => 'Please wait before requesting another code.',
+    'otp_expired' => 'The verification code has expired.',
+    'otp_too_many_attempts' => 'Too many attempts. Request a new code.',
+    'otp_invalid_or_expired' => 'Invalid or expired verification code.',
 
     // Media
     'file_missing' => 'File missing on disk.',
     'media_not_owned' => 'Media does not belong to the current user.',
     'media_already_attached' => 'Media is already attached to a different resource.',
+    'unknown_media_purpose' => 'Unknown media purpose: :purpose.',
     'file_exceeds' => 'File exceeds :max KB.',
     'file_ext_allowed' => 'File extension must be one of: :values.',
 
@@ -35,6 +43,10 @@ return [
     'term_not_open_enrollment' => 'Term is not currently open for enrollment.',
     'already_enrolled' => 'Already enrolled in this term.',
     'user_must_be_student_or_missionary' => 'User must have the student or missionary role.',
+
+    // Homework submissions
+    'homework_deadline_passed' => 'The deadline for this homework has passed.',
+    'homework_already_accepted' => 'This homework has already been accepted.',
 
     // Exams
     'exam_no_questions' => 'Exam has no questions.',

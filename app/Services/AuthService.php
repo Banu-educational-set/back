@@ -146,7 +146,7 @@ class AuthService
         $this->otp->verify($phone, OtpService::PURPOSE_PASSWORD_RESET, $code);
 
         if (! User::where('phone', $phone)->exists()) {
-            throw ValidationException::withMessages(['phone' => ['Account not found.']]);
+            throw ValidationException::withMessages(['phone' => [__('errors.account_not_found')]]);
         }
 
         $token = Str::random(64);
@@ -180,14 +180,14 @@ class AuthService
 
         if (! $row || Carbon::parse($row->expires_at)->isPast()) {
             throw ValidationException::withMessages([
-                'token' => ['Invalid or expired reset token.'],
+                'token' => [__('errors.invalid_reset_token')],
             ]);
         }
 
         $user = User::where('phone', $phone)->first();
 
         if (! $user) {
-            throw ValidationException::withMessages(['phone' => ['Account not found.']]);
+            throw ValidationException::withMessages(['phone' => [__('errors.account_not_found')]]);
         }
 
         DB::transaction(function () use ($row, $user, $newPassword) {

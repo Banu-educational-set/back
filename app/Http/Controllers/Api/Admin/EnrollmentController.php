@@ -65,7 +65,7 @@ class EnrollmentController extends Controller
 
         return ApiResponse::success(
             new TermEnrollmentResource($enrollment->load('term')),
-            'User enrolled.',
+            __('messages.user_enrolled'),
             201,
         );
     }

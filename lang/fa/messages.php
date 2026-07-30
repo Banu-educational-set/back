@@ -13,6 +13,7 @@ return [
     'password_updated' => 'رمز عبور به‌روزرسانی شد.',
     'profile_updated' => 'پروفایل به‌روزرسانی شد.',
     'register_data_saved' => 'اطلاعات ثبت‌نام ذخیره شد.',
+    'verification_code' => 'کد تأیید شما: :code',
 
     // Users
     'user_created' => 'کاربر ایجاد شد.',
@@ -49,6 +50,11 @@ return [
     'homework_created' => 'تکلیف ایجاد شد.',
     'homework_updated' => 'تکلیف به‌روزرسانی شد.',
     'homework_deleted' => 'تکلیف حذف شد.',
+    'homework_submitted' => 'تکلیف ارسال شد.',
+    'submission_reviewed' => 'ارسال تکلیف بررسی شد.',
+
+    // Enrollment
+    'user_enrolled' => 'کاربر در ترم ثبت‌نام شد.',
 
     // Media
     'media_uploaded' => 'فایل بارگذاری شد.',

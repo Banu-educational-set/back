@@ -6,6 +6,7 @@ use App\Enums\Gender;
 use App\Enums\MarriageStatus;
 use App\Enums\RoleName;
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -15,7 +16,7 @@ class StoreUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('create', \App\Models\User::class) ?? false;
+        return $this->user()?->can('create', User::class) ?? false;
     }
 
     public function rules(): array
@@ -37,6 +38,14 @@ class StoreUserRequest extends FormRequest
             'gender' => ['nullable', 'string', Rule::in(Gender::values())],
             'address' => ['nullable', 'string', 'max:1000'],
             'bio' => ['nullable', 'string', 'max:2000'],
+            'avatar_media_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('media', 'id')->where(fn ($query) => $query
+                    ->where('collection_name', 'avatar')
+                    ->where('uploaded_by', $this->user()?->id)
+                    ->whereNull('model_id')),
+            ],
         ];
     }
 

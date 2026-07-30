@@ -13,6 +13,7 @@ return [
     'password_updated' => 'Password updated.',
     'profile_updated' => 'Profile updated.',
     'register_data_saved' => 'Register data saved.',
+    'verification_code' => 'Your verification code: :code',
 
     // Users
     'user_created' => 'User created.',
@@ -49,6 +50,11 @@ return [
     'homework_created' => 'Homework created.',
     'homework_updated' => 'Homework updated.',
     'homework_deleted' => 'Homework deleted.',
+    'homework_submitted' => 'Homework submitted.',
+    'submission_reviewed' => 'Submission reviewed.',
+
+    // Enrollment
+    'user_enrolled' => 'User enrolled.',
 
     // Media
     'media_uploaded' => 'Media uploaded.',
